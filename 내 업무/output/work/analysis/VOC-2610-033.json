@@ -1,0 +1,30 @@
+{
+  "ticket_id": "VOC-2610-033",
+  "evidence": [
+    "purchase_requests: PR-26100411 status=PENDING_APPROVAL, current_approver_id=U1006, created_at=2026-10-23 14:02, updated_at=2026-10-23 14:02 (생성 후 변경 없음)",
+    "approvers: U1006 강도윤 생산관리팀 APPROVER status=INACTIVE, last_login_at=2026-10-17 18:20",
+    "same_approver_pending: U1006에게 걸린 결재 대기 건 2건 - PR-26100411(요청자 U1010), PR-26100412(요청자 U1009, 2026-10-23 16:10)",
+    "dept_active_approvers: U1013 배수아 생산관리팀 APPROVER status=ACTIVE (재지정 대상 후보)",
+    "users: U1010 신동혁 status=ACTIVE, login_fail_count=0 (요청자 계정 이상 없음)",
+    "error_logs: 조회 기간(2026-10-24 09:15 ~ 2026-10-27 09:15) 내 해당 건 관련 에러 로그 없음",
+    "code_master: USER_STATUS INACTIVE remark=퇴사·부서이동 시 인사 연동으로 변경"
+  ],
+  "cause": "PR-26100411의 결재자 U1006(강도윤)이 인사 연동으로 INACTIVE 처리되었는데, 기존 결재 대기 건은 자동 이관되지 않아 결재선에 계속 남아 있습니다. 그래서 현재 팀장 결재함에 보이지 않고 결재가 멈춘 상태입니다.",
+  "actions": [
+    "운영자 화면 [결재 관리 > 결재선 재지정]에서 PR-26100411의 결재자를 U1006에서 생산관리팀 현 APPROVER U1013(배수아)으로 변경",
+    "같은 결재자 U1006에게 걸린 대기 건 PR-26100412(요청자 U1009)도 U1013으로 함께 재지정",
+    "재지정 후 두 건이 U1013 결재함에 보이는지 확인",
+    "요청자 U1010에게 결과 안내, PR-26100412 요청자 U1009에게도 결재선 변경 사실 안내"
+  ],
+  "action_owner": "직접 조치",
+  "action_summary": "INACTIVE 결재자 U1006의 대기 건 2건(PR-26100411, PR-26100412)을 생산관리팀 현 결재자 U1013으로 결재선 재지정",
+  "precondition": "",
+  "transfer_to": "",
+  "transfer_content": "",
+  "notes": [
+    "VOC에 적힌 PR-26100411만이 아니라 같은 결재자에게 걸린 PR-26100412도 함께 재지정해야 합니다(처리노하우, VOC-2610-009 선례).",
+    "생산관리팀 ACTIVE APPROVER가 U1013 1명뿐이라 재지정 대상으로 제안합니다. 요청자가 말한 '팀장님'이 U1013인지는 context로 확인할 수 없습니다.",
+    "context의 batch_logs(L-880170~L-880173, E-BAT-102, PR-26100418~20)는 APPROVED→ORDERED 동기화 실패로, 이 티켓(결재 대기 건)과 관련이 없습니다. 이 티켓의 원인으로 쓰지 않습니다.",
+    "실제 결재선 재지정은 사람(Task 7)이 수행합니다. 보고서에는 제안만 합니다."
+  ]
+}

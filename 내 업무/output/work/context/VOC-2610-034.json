@@ -1,0 +1,226 @@
+{
+  "ticket": {
+    "ticket_id": "VOC-2610-034",
+    "received_at": "2026-10-27 09:24",
+    "requester": {
+      "user_id": "U1011",
+      "name": "조은비",
+      "dept": "생산기술팀",
+      "role": "REQUESTER",
+      "extra_permission": "",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 09:20",
+      "pw_changed_at": "2026-10-06"
+    },
+    "category": "기준정보",
+    "title": "품목 검색에 토크 센서가 안 나와요",
+    "content": "품목 검색에서 '토크 센서'를 입력하면 결과가 없습니다. 지난주에 신규 품목으로 등록 요청했다고 들었는데 아직 안 된 건가요?",
+    "priority": "보통"
+  },
+  "classification": {
+    "ticket_id": "VOC-2610-034",
+    "route": "장애·문의",
+    "type": "기준정보 미등록",
+    "category_changed": false,
+    "priority": "보통",
+    "priority_reason": "접수 우선순위 보통 유지. 기한 언급 없음",
+    "representative_ticket": null,
+    "target_user_ids": [
+      "U1011"
+    ],
+    "mentioned_req_ids": [],
+    "summary": "생산기술팀 조은비 품목 검색에 '토크 센서' 미검색 - 신규 품목 등록 요청 진행 여부 확인",
+    "reason": "신규 등록 요청한 품목이 검색되지 않는다는 내용으로 이력의 기준정보 미등록 유형과 같음. 요청자 카테고리(기준정보)와 일치. 품목 use_yn 상태는 분석 단계에서 확인"
+  },
+  "target_users": [
+    {
+      "user_id": "U1011",
+      "name": "조은비",
+      "dept": "생산기술팀",
+      "role": "REQUESTER",
+      "extra_permission": "",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 09:20",
+      "pw_changed_at": "2026-10-06"
+    }
+  ],
+  "purchase_requests": [
+    {
+      "req_id": "PR-26100420",
+      "requester_id": "U1011",
+      "item_code": "ITM-20117",
+      "qty": "6",
+      "amount": "960000",
+      "status": "APPROVED",
+      "current_approver_id": "",
+      "created_at": "2026-10-23 13:44",
+      "updated_at": "2026-10-26 17:30"
+    }
+  ],
+  "approvers": [],
+  "same_approver_pending": [],
+  "dept_active_approvers": [
+    {
+      "user_id": "U1012",
+      "name": "한승우",
+      "dept": "생산기술팀",
+      "role": "APPROVER",
+      "extra_permission": "DEPT_VIEW",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 07:58",
+      "pw_changed_at": "2026-08-29"
+    }
+  ],
+  "error_logs": [
+    {
+      "log_id": "L-880173",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100420",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    },
+    {
+      "log_id": "L-880195",
+      "occurred_at": "2026-10-27 09:21",
+      "user_id": "U1011",
+      "req_id": "",
+      "screen_or_batch": "ITEM_SEARCH",
+      "error_code": "I-ITEM-000",
+      "message": "no result for keyword='토크 센서'"
+    }
+  ],
+  "batch_logs": [
+    {
+      "log_id": "L-880170",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "ERP interface timeout (30s) - 0/3 records synced"
+    },
+    {
+      "log_id": "L-880171",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100418",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    },
+    {
+      "log_id": "L-880172",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100419",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    },
+    {
+      "log_id": "L-880173",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100420",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    }
+  ],
+  "code_master": [
+    {
+      "code_type": "ITEM",
+      "code": "ITM-20117",
+      "code_name": "산업용 장갑(10켤레)",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2025-06-11"
+    },
+    {
+      "code_type": "ITEM",
+      "code": "ITM-30322",
+      "code_name": "토크 센서 TS-200",
+      "use_yn": "N",
+      "remark": "신규 등록 요청(구매팀 검토 중)",
+      "updated_at": "2026-10-24"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "DRAFT",
+      "code_name": "임시저장",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "PENDING_APPROVAL",
+      "code_name": "결재 대기",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "APPROVED",
+      "code_name": "결재 완료(발주 대기)",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "ORDERED",
+      "code_name": "발주 완료",
+      "use_yn": "Y",
+      "remark": "BAT-ORDER-SYNC가 ERP 발주 결과로 갱신",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "CANCELED",
+      "code_name": "취소",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "ACTIVE",
+      "code_name": "사용",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "LOCKED",
+      "code_name": "잠금",
+      "use_yn": "Y",
+      "remark": "로그인 5회 실패 시 자동 잠금",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "INACTIVE",
+      "code_name": "미사용",
+      "use_yn": "Y",
+      "remark": "퇴사·부서이동 시 인사 연동으로 변경",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PERMISSION",
+      "code": "DEPT_VIEW",
+      "code_name": "부서 구매요청 현황 조회",
+      "use_yn": "Y",
+      "remark": "팀장 승인 후 부여",
+      "updated_at": "2024-01-01"
+    }
+  ],
+  "query_window": "2026-10-24 09:24 ~ 2026-10-27 09:24"
+}

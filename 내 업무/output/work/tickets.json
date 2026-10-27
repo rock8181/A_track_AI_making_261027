@@ -1,0 +1,195 @@
+{
+  "loaded_at": "2026-10-27 16:49",
+  "tickets": [
+    {
+      "ticket_id": "VOC-2610-031",
+      "received_at": "2026-10-27 08:12",
+      "requester": {
+        "user_id": "U1004",
+        "name": "최지은",
+        "dept": "품질팀",
+        "role": "REQUESTER",
+        "extra_permission": "",
+        "status": "LOCKED",
+        "login_fail_count": "5",
+        "last_login_at": "2026-10-23 17:55",
+        "pw_changed_at": "2026-08-11"
+      },
+      "category": "로그인/계정",
+      "title": "로그인이 안 됩니다",
+      "content": "금요일 퇴근 전에 비밀번호를 몇 번 틀렸는데 오늘 아침부터 로그인이 아예 안 됩니다. 오늘 오전 중에 구매요청을 올려야 해서 급합니다.",
+      "priority": "높음"
+    },
+    {
+      "ticket_id": "VOC-2610-032",
+      "received_at": "2026-10-27 09:08",
+      "requester": {
+        "user_id": "U1005",
+        "name": "정해린",
+        "dept": "설비팀",
+        "role": "REQUESTER",
+        "extra_permission": "",
+        "status": "ACTIVE",
+        "login_fail_count": "0",
+        "last_login_at": "2026-10-27 09:02",
+        "pw_changed_at": "2026-09-28"
+      },
+      "category": "오류",
+      "title": "부서 구매요청 현황 화면 접속 시 오류",
+      "content": "구매요청 > 부서 현황 메뉴를 누르면 '권한이 없습니다' 메시지가 나옵니다. 지난주까지는 됐던 것 같은데 시스템 오류인가요?",
+      "priority": "보통"
+    },
+    {
+      "ticket_id": "VOC-2610-033",
+      "received_at": "2026-10-27 09:15",
+      "requester": {
+        "user_id": "U1010",
+        "name": "신동혁",
+        "dept": "생산관리팀",
+        "role": "REQUESTER",
+        "extra_permission": "",
+        "status": "ACTIVE",
+        "login_fail_count": "0",
+        "last_login_at": "2026-10-27 08:58",
+        "pw_changed_at": "2026-09-10"
+      },
+      "category": "결재",
+      "title": "결재 올린 건이 며칠째 그대로입니다",
+      "content": "23일에 올린 근접 센서 구매요청(PR-26100411)이 아직 결재 대기입니다. 팀장님께 여쭤보니 결재함에 안 보인다고 하십니다.",
+      "priority": "보통"
+    },
+    {
+      "ticket_id": "VOC-2610-034",
+      "received_at": "2026-10-27 09:24",
+      "requester": {
+        "user_id": "U1011",
+        "name": "조은비",
+        "dept": "생산기술팀",
+        "role": "REQUESTER",
+        "extra_permission": "",
+        "status": "ACTIVE",
+        "login_fail_count": "0",
+        "last_login_at": "2026-10-27 09:20",
+        "pw_changed_at": "2026-10-06"
+      },
+      "category": "기준정보",
+      "title": "품목 검색에 토크 센서가 안 나와요",
+      "content": "품목 검색에서 '토크 센서'를 입력하면 결과가 없습니다. 지난주에 신규 품목으로 등록 요청했다고 들었는데 아직 안 된 건가요?",
+      "priority": "보통"
+    },
+    {
+      "ticket_id": "VOC-2610-035",
+      "received_at": "2026-10-27 09:30",
+      "requester": {
+        "user_id": "U1001",
+        "name": "김민수",
+        "dept": "생산기술팀",
+        "role": "REQUESTER",
+        "extra_permission": "",
+        "status": "ACTIVE",
+        "login_fail_count": "0",
+        "last_login_at": "2026-10-27 08:41",
+        "pw_changed_at": "2026-09-02"
+      },
+      "category": "오류",
+      "title": "구매요청 저장할 때 시스템 오류",
+      "content": "어제 오후에 구매요청 저장 버튼을 누르면 '시스템 오류가 발생했습니다(E-SYS-500)'가 뜨면서 저장이 안 됩니다. 견적서 PDF를 첨부한 상태였습니다.",
+      "priority": "보통"
+    },
+    {
+      "ticket_id": "VOC-2610-036",
+      "received_at": "2026-10-27 09:33",
+      "requester": {
+        "user_id": "U1009",
+        "name": "임채원",
+        "dept": "생산관리팀",
+        "role": "REQUESTER",
+        "extra_permission": "",
+        "status": "ACTIVE",
+        "login_fail_count": "0",
+        "last_login_at": "2026-10-27 08:50",
+        "pw_changed_at": "2026-07-21"
+      },
+      "category": "로그인/계정",
+      "title": "로그인할 때마다 비밀번호 변경 화면이 떠요",
+      "content": "로그인하면 비밀번호를 변경하라는 화면이 매번 나옵니다. '다음에 변경'을 눌러도 다음날 또 나옵니다.",
+      "priority": "낮음"
+    },
+    {
+      "ticket_id": "VOC-2610-037",
+      "received_at": "2026-10-27 09:40",
+      "requester": {
+        "user_id": "U1002",
+        "name": "이서연",
+        "dept": "구매팀",
+        "role": "PURCHASER",
+        "extra_permission": "DEPT_VIEW",
+        "status": "ACTIVE",
+        "login_fail_count": "0",
+        "last_login_at": "2026-10-27 08:05",
+        "pw_changed_at": "2026-08-20"
+      },
+      "category": "오류",
+      "title": "결재 완료 건 발주 상태가 갱신되지 않음",
+      "content": "어제 결재 완료된 건들이 오늘 아침에도 '결재 완료'로만 보이고 '발주 완료'로 바뀌지 않았습니다. ERP에는 발주가 들어갔는지 확인 부탁드립니다.",
+      "priority": "높음"
+    },
+    {
+      "ticket_id": "VOC-2610-038",
+      "received_at": "2026-10-27 09:52",
+      "requester": {
+        "user_id": "U1011",
+        "name": "조은비",
+        "dept": "생산기술팀",
+        "role": "REQUESTER",
+        "extra_permission": "",
+        "status": "ACTIVE",
+        "login_fail_count": "0",
+        "last_login_at": "2026-10-27 09:20",
+        "pw_changed_at": "2026-10-06"
+      },
+      "category": "기타",
+      "title": "구매요청 목록 엑셀 다운로드 기능 요청",
+      "content": "매주 팀 구매 현황을 정리하는데 화면을 하나씩 복사하고 있습니다. 목록 화면에 엑셀 다운로드 버튼을 추가해 주시면 좋겠습니다.",
+      "priority": "낮음"
+    },
+    {
+      "ticket_id": "VOC-2610-039",
+      "received_at": "2026-10-27 10:05",
+      "requester": {
+        "user_id": "U1012",
+        "name": "한승우",
+        "dept": "생산기술팀",
+        "role": "APPROVER",
+        "extra_permission": "DEPT_VIEW",
+        "status": "ACTIVE",
+        "login_fail_count": "0",
+        "last_login_at": "2026-10-27 07:58",
+        "pw_changed_at": "2026-08-29"
+      },
+      "category": "결재",
+      "title": "결재함에 같은 건이 두 번 있습니다",
+      "content": "김민수 프로의 디지털 캘리퍼 구매요청이 결재함에 똑같이 두 건 올라와 있습니다. 둘 다 승인하면 되나요?",
+      "priority": "보통"
+    },
+    {
+      "ticket_id": "VOC-2610-040",
+      "received_at": "2026-10-27 10:11",
+      "requester": {
+        "user_id": "U1003",
+        "name": "박준호",
+        "dept": "설비팀",
+        "role": "APPROVER",
+        "extra_permission": "DEPT_VIEW",
+        "status": "ACTIVE",
+        "login_fail_count": "0",
+        "last_login_at": "2026-10-27 09:12",
+        "pw_changed_at": "2026-09-15"
+      },
+      "category": "오류",
+      "title": "팀원 화면 권한 오류 확인 요청",
+      "content": "저희 팀 정해린 프로가 부서 현황 화면에서 오류가 난다고 합니다. 확인 부탁드립니다.",
+      "priority": "보통"
+    }
+  ]
+}

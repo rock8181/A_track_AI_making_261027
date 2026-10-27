@@ -1,0 +1,14 @@
+﻿log_id,occurred_at,user_id,req_id,screen_or_batch,error_code,message
+L-880101,2026-10-23 17:52,U1004,,LOGIN,E-AUTH-401,invalid password (fail_count=3)
+L-880102,2026-10-23 17:54,U1004,,LOGIN,E-AUTH-401,invalid password (fail_count=4)
+L-880103,2026-10-23 17:55,U1004,,LOGIN,E-AUTH-423,account locked (fail_count=5)
+L-880150,2026-10-26 15:21,U1001,PR-26100425,PR_CREATE,W-PR-DUP,duplicate submit detected (interval=1s) - not blocked
+L-880161,2026-10-26 16:12,U1001,,PR_CREATE,E-FILE-413,attachment size exceeded (24.6MB > 20MB)
+L-880162,2026-10-26 16:14,U1001,,PR_CREATE,E-FILE-413,attachment size exceeded (24.6MB > 20MB)
+L-880170,2026-10-27 02:00,SYSTEM,,BAT-ORDER-SYNC,E-BAT-102,ERP interface timeout (30s) - 0/3 records synced
+L-880171,2026-10-27 02:00,SYSTEM,PR-26100418,BAT-ORDER-SYNC,E-BAT-102,sync failed: status remains APPROVED
+L-880172,2026-10-27 02:00,SYSTEM,PR-26100419,BAT-ORDER-SYNC,E-BAT-102,sync failed: status remains APPROVED
+L-880173,2026-10-27 02:00,SYSTEM,PR-26100420,BAT-ORDER-SYNC,E-BAT-102,sync failed: status remains APPROVED
+L-880190,2026-10-27 09:03,U1005,,PR_DEPT_STATUS,E-AUTH-403,permission denied: DEPT_VIEW required
+L-880191,2026-10-27 09:06,U1005,,PR_DEPT_STATUS,E-AUTH-403,permission denied: DEPT_VIEW required
+L-880195,2026-10-27 09:21,U1011,,ITEM_SEARCH,I-ITEM-000,no result for keyword='토크 센서'

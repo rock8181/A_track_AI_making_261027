@@ -1,0 +1,244 @@
+{
+  "ticket": {
+    "ticket_id": "VOC-2610-033",
+    "received_at": "2026-10-27 09:15",
+    "requester": {
+      "user_id": "U1010",
+      "name": "신동혁",
+      "dept": "생산관리팀",
+      "role": "REQUESTER",
+      "extra_permission": "",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 08:58",
+      "pw_changed_at": "2026-09-10"
+    },
+    "category": "결재",
+    "title": "결재 올린 건이 며칠째 그대로입니다",
+    "content": "23일에 올린 근접 센서 구매요청(PR-26100411)이 아직 결재 대기입니다. 팀장님께 여쭤보니 결재함에 안 보인다고 하십니다.",
+    "priority": "보통"
+  },
+  "classification": {
+    "ticket_id": "VOC-2610-033",
+    "route": "장애·문의",
+    "type": "결재선 오류",
+    "category_changed": false,
+    "priority": "보통",
+    "priority_reason": "접수 우선순위 보통 유지. 기한 언급 없음(단, 같은 결재자에게 걸린 다른 대기 건 여부를 분석 단계에서 확인 필요)",
+    "representative_ticket": null,
+    "target_user_ids": [
+      "U1010"
+    ],
+    "mentioned_req_ids": [
+      "PR-26100411"
+    ],
+    "summary": "생산관리팀 신동혁 PR-26100411 23일부터 결재 대기, 팀장 결재함에 미표시",
+    "reason": "결재 대기 2일 이상 + 팀장 결재함에 보이지 않는다는 내용으로, 이력의 결재선 오류 유형(결재자 INACTIVE 등)과 같은 증상. 원인은 결재자 계정 상태를 로그·DB로 확인해야 하며 이 단계에서는 단정하지 않음. 요청자 카테고리(결재)와 같은 분류"
+  },
+  "target_users": [
+    {
+      "user_id": "U1010",
+      "name": "신동혁",
+      "dept": "생산관리팀",
+      "role": "REQUESTER",
+      "extra_permission": "",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 08:58",
+      "pw_changed_at": "2026-09-10"
+    }
+  ],
+  "purchase_requests": [
+    {
+      "req_id": "PR-26100411",
+      "requester_id": "U1010",
+      "item_code": "ITM-30215",
+      "qty": "4",
+      "amount": "1880000",
+      "status": "PENDING_APPROVAL",
+      "current_approver_id": "U1006",
+      "created_at": "2026-10-23 14:02",
+      "updated_at": "2026-10-23 14:02"
+    }
+  ],
+  "approvers": [
+    {
+      "user_id": "U1006",
+      "name": "강도윤",
+      "dept": "생산관리팀",
+      "role": "APPROVER",
+      "extra_permission": "DEPT_VIEW",
+      "status": "INACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-17 18:20",
+      "pw_changed_at": "2026-07-30"
+    }
+  ],
+  "same_approver_pending": [
+    {
+      "req_id": "PR-26100411",
+      "requester_id": "U1010",
+      "item_code": "ITM-30215",
+      "qty": "4",
+      "amount": "1880000",
+      "status": "PENDING_APPROVAL",
+      "current_approver_id": "U1006",
+      "created_at": "2026-10-23 14:02",
+      "updated_at": "2026-10-23 14:02"
+    },
+    {
+      "req_id": "PR-26100412",
+      "requester_id": "U1009",
+      "item_code": "ITM-30108",
+      "qty": "10",
+      "amount": "450000",
+      "status": "PENDING_APPROVAL",
+      "current_approver_id": "U1006",
+      "created_at": "2026-10-23 16:10",
+      "updated_at": "2026-10-23 16:10"
+    }
+  ],
+  "dept_active_approvers": [
+    {
+      "user_id": "U1013",
+      "name": "배수아",
+      "dept": "생산관리팀",
+      "role": "APPROVER",
+      "extra_permission": "DEPT_VIEW",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 08:10",
+      "pw_changed_at": "2026-10-20"
+    }
+  ],
+  "error_logs": [],
+  "batch_logs": [
+    {
+      "log_id": "L-880170",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "ERP interface timeout (30s) - 0/3 records synced"
+    },
+    {
+      "log_id": "L-880171",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100418",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    },
+    {
+      "log_id": "L-880172",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100419",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    },
+    {
+      "log_id": "L-880173",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100420",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    }
+  ],
+  "code_master": [
+    {
+      "code_type": "ITEM",
+      "code": "ITM-30215",
+      "code_name": "근접 센서 모듈",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2026-02-14"
+    },
+    {
+      "code_type": "ITEM",
+      "code": "ITM-30322",
+      "code_name": "토크 센서 TS-200",
+      "use_yn": "N",
+      "remark": "신규 등록 요청(구매팀 검토 중)",
+      "updated_at": "2026-10-24"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "DRAFT",
+      "code_name": "임시저장",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "PENDING_APPROVAL",
+      "code_name": "결재 대기",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "APPROVED",
+      "code_name": "결재 완료(발주 대기)",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "ORDERED",
+      "code_name": "발주 완료",
+      "use_yn": "Y",
+      "remark": "BAT-ORDER-SYNC가 ERP 발주 결과로 갱신",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "CANCELED",
+      "code_name": "취소",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "ACTIVE",
+      "code_name": "사용",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "LOCKED",
+      "code_name": "잠금",
+      "use_yn": "Y",
+      "remark": "로그인 5회 실패 시 자동 잠금",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "INACTIVE",
+      "code_name": "미사용",
+      "use_yn": "Y",
+      "remark": "퇴사·부서이동 시 인사 연동으로 변경",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PERMISSION",
+      "code": "DEPT_VIEW",
+      "code_name": "부서 구매요청 현황 조회",
+      "use_yn": "Y",
+      "remark": "팀장 승인 후 부여",
+      "updated_at": "2024-01-01"
+    }
+  ],
+  "query_window": "2026-10-24 09:15 ~ 2026-10-27 09:15"
+}

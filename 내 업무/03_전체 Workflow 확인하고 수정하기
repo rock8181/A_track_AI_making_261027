@@ -1,0 +1,19 @@
+- 앞에서 `Parallel / Router / Gen-Eval`을 하나씩 검토하면서 확정한 전체 Workflow가 `workflow.md`에 저장되어 있습니다.
+- 이번 단계에서는 Workflow를 다시 설계하지 않고, **현재 구조를 HTML로 시각화해서 한눈에 확인**합니다.
+- 코드 / AI / 사람 Task와 적용한 패턴이 실제 업무 흐름에서 어떻게 연결되는지 확인합니다.
+- 아직 Agent를 실제로 만들기 전이므로, 세부 지시서가 아니라 **전체 실행 흐름과 연결 관계**에 집중합니다.
+
+```jsx
+workflow.md를 읽고
+현재 Workflow를 한눈에 확인할 수 있는 HTML로 시각화해줘.
+
+조건:
+- workflow.md에 확정된 Workflow를 그대로 사용하기
+- 입력자료부터 결과물까지 전체 흐름을 보여주기
+- 코드 / AI / 사람 Task를 명확하게 구분하기
+- Parallel / Router / Gen-Eval 구조가 잘 드러나게 표현하기
+- Task 간 연결 관계와 실행 순서를 화살표로 표현하기
+- 새로운 Task나 Sub Agent를 임의로 추가하지 않기
+- Workflow의 내용을 임의로 수정하지 않기
+
+현재 폴더에 my-agent-team.html로 저장하고 열어줘.

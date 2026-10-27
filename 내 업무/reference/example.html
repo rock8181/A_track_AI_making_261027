@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VOC 처리 검토 보고서</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --surface: #ffffff; --surface-2: #f0f2f5; --border: #dfe3e8;
+    --text: #1d2330; --muted: #5d6675; --accent: #2457c5;
+    --high: #c62828; --high-bg: #fdecea; --mid: #a15c00; --mid-bg: #fff4e0;
+    --low: #2e7d32; --low-bg: #e8f5e9; --info-bg: #e8effc; --warn-bg: #fff8e1; --warn: #8a6100;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14171c; --surface: #1d2128; --surface-2: #262b33; --border: #353b45;
+      --text: #e6e9ee; --muted: #9aa3b0; --accent: #7aa2f7;
+      --high: #ff8a80; --high-bg: #3a1f1f; --mid: #ffc46b; --mid-bg: #3a2e18;
+      --low: #81c784; --low-bg: #1e3321; --info-bg: #1f2a40; --warn-bg: #3a3218; --warn: #ffd166;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: "Pretendard", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; font-size: 15px; line-height: 1.6; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 16px 64px; }
+  header h1 { margin: 0 0 4px; font-size: 26px; }
+  header p { margin: 0; color: var(--muted); }
+  h2 { font-size: 18px; margin: 36px 0 12px; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+
+  /* 요약 */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 20px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .stat .label { color: var(--muted); font-size: 13px; }
+  .stat .value { font-size: 28px; font-weight: 700; }
+  .stat .sub { font-size: 13px; color: var(--muted); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+  .typebar { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { display: inline-block; padding: 2px 10px; border-radius: 999px; background: var(--surface-2);
+    border: 1px solid var(--border); font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 13px; }
+  tr:last-child td { border-bottom: 0; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* 배지 */
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .p-high { color: var(--high); background: var(--high-bg); }
+  .p-mid { color: var(--mid); background: var(--mid-bg); }
+  .p-low { color: var(--low); background: var(--low-bg); }
+  .b-type { color: var(--accent); background: var(--info-bg); }
+  .b-flag { color: var(--warn); background: var(--warn-bg); }
+
+  /* 티켓 카드 */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
+  .card-head { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; }
+  .card-head .no { font-weight: 700; font-family: Consolas, monospace; }
+  .card-head .title { font-weight: 700; font-size: 16px; flex: 1 1 280px; }
+  .card-head .meta { color: var(--muted); font-size: 13px; }
+  .card-body { padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; }
+  @media (max-width: 760px) { .card-body { grid-template-columns: 1fr; } }
+  .full { grid-column: 1 / -1; }
+  .sec h4 { margin: 0 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .sec ul { margin: 0; padding-left: 18px; }
+  .sec p { margin: 0; }
+  .voc { background: var(--surface-2); border-radius: 8px; padding: 10px 12px; font-size: 14px; color: var(--muted); }
+  code { font-family: Consolas, monospace; font-size: 13px; background: var(--surface-2); padding: 0 4px; border-radius: 4px; }
+  .note { border-left: 3px solid var(--warn); background: var(--warn-bg); padding: 8px 12px; border-radius: 0 8px 8px 0; }
+  .answer { position: relative; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; background: var(--surface); white-space: pre-line; }
+  .copy { position: absolute; top: 8px; right: 8px; font-size: 12px; padding: 3px 10px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--surface-2); color: var(--text); cursor: pointer; }
+  .copy:hover { border-color: var(--accent); }
+  .answer-text { padding-right: 56px; }
+  footer { margin-top: 32px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>VOC 처리 검토 보고서</h1>
+  <p>TRV 출장·경비 정산 시스템 · 2026-11-03(화) 10:10 기준 · 접수 VOC 7건 · 작성: VOC 처리 Agent (검토 대기)</p>
+</header>
+
+<!-- ============ 상단 요약 ============ -->
+<div class="stats">
+  <div class="stat"><div class="label">오늘 접수</div><div class="value">7건</div><div class="sub">08:20 ~ 10:05 접수</div></div>
+  <div class="stat"><div class="label">우선순위 높음</div><div class="value" style="color:var(--high)">2건</div><div class="sub">보통 4 · 낮음 1</div></div>
+  <div class="stat"><div class="label">직접 조치</div><div class="value">3건</div><div class="sub">확인 후 처리 가능</div></div>
+  <div class="stat"><div class="label">이관 필요</div><div class="value">3건</div><div class="sub">개발팀 · 재무팀 · 개선요청</div></div>
+  <div class="stat"><div class="label">카테고리 재분류</div><div class="value">5건</div><div class="sub">요청자 선택과 다름</div></div>
+</div>
+
+<h2>오늘 VOC 현황</h2>
+<div class="two">
+  <div class="panel">
+    <h4 style="margin:0 0 10px">처리 유형별</h4>
+    <div class="typebar">
+      <span class="chip">배치 오류 1</span><span class="chip">계정 잠금 1</span><span class="chip">첨부파일 형식 1</span>
+      <span class="chip">결재선(대결자) 1</span><span class="chip">기준정보 1</span><span class="chip">중복 VOC 1</span><span class="chip">개선 요청 1</span>
+    </div>
+  </div>
+  <div class="panel">
+    <h4 style="margin:0 0 10px">우선순위별</h4>
+    <div class="typebar">
+      <span class="badge p-high">높음 2</span> <span class="badge p-mid">보통 4</span> <span class="badge p-low">낮음 1</span>
+    </div>
+    <p style="margin:10px 0 0;font-size:13px;color:var(--muted)">처리 기한: 높음 2시간 이내 · 보통 당일 · 낮음 3영업일 이내</p>
+  </div>
+</div>
+
+<h2>먼저 볼 건</h2>
+<div class="panel">
+  <table>
+    <tr><th style="width:130px">티켓</th><th>내용</th><th style="width:90px">우선순위</th><th style="width:150px">처리 기한</th></tr>
+    <tr><td><a href="#VOC-2611-012">VOC-2611-012</a></td><td>법인카드 사용내역 연동 배치 실패, 영향 14건 (전사)</td><td><span class="badge p-high">높음 ↑</span></td><td>11:50까지</td></tr>
+    <tr><td><a href="#VOC-2611-013">VOC-2611-013</a></td><td>계정 잠금, 요청자가 오전 11시 출장 출발 전 정산 필요</td><td><span class="badge p-high">높음</span></td><td>10:20까지 <span class="badge p-high">임박</span></td></tr>
+  </table>
+</div>
+
+<h2>내가 할 조치 / 이관 목록</h2>
+<div class="two">
+  <div class="panel">
+    <h4 style="margin:0 0 6px">직접 조치</h4>
+    <table>
+      <tr><th style="width:120px">티켓</th><th>조치</th><th style="width:110px">선행 조건</th></tr>
+      <tr><td><a href="#VOC-2611-013">013</a></td><td>계정 잠금 해제, 실패 횟수 초기화</td><td>본인 확인</td></tr>
+      <tr><td><a href="#VOC-2611-015">015</a></td><td>대결자 지정 (대기 3건 함께)</td><td>부서장 확인</td></tr>
+      <tr><td><a href="#VOC-2611-016">016</a></td><td>014 대표 티켓에 병합</td><td>-</td></tr>
+    </table>
+  </div>
+  <div class="panel">
+    <h4 style="margin:0 0 6px">이관</h4>
+    <table>
+      <tr><th style="width:120px">티켓</th><th>이관처</th><th>전달 내용</th></tr>
+      <tr><td><a href="#VOC-2611-012">012</a></td><td>개발팀 (장애 티켓)</td><td>배치 실패 로그, 영향 정산건 14건 목록</td></tr>
+      <tr><td><a href="#VOC-2611-018">018</a></td><td>재무팀</td><td>11/02 USD 환율 미반영</td></tr>
+      <tr><td><a href="#VOC-2611-017">017</a></td><td>개선요청 게시판</td><td>월별 경비 통계 화면 요청</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ============ 티켓별 카드 ============ -->
+<h2>티켓별 검토</h2>
+
+<div class="card" id="VOC-2611-012">
+  <div class="card-head">
+    <span class="no">VOC-2611-012</span>
+    <span class="title">법인카드 사용내역이 안 불러와집니다</span>
+    <span class="badge b-type">배치 오류</span>
+    <span class="badge p-high">높음 ↑ (요청: 보통)</span>
+    <span class="meta">문가람 · 재무팀 · 09:50 접수</span>
+  </div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">어제 사용한 법인카드 내역이 정산 화면에 안 보입니다. 다른 팀원들도 같다고 합니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4>
+      <p>요청자 카테고리 <b>오류</b> → <b>배치 오류</b>로 재분류. 영향 범위가 전사라서 우선순위를 <b>보통 → 높음</b>으로 올림.</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4>
+      <ul><li>배치 로그 <code>BAT-CARD-IMPORT</code> 11/03 03:00 <code>E-BAT-210</code> 카드사 응답 지연</li>
+      <li>11/02 사용분 14건이 정산 테이블에 미적재</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4>
+      <p>카드사 인터페이스 응답 지연으로 새벽 수집 배치가 실패함. 운영담당은 재실행하지 않고 개발팀에 장애 티켓으로 이관.</p></div>
+    <div class="sec"><h4>이관·주의사항</h4>
+      <div class="note">개발팀 이관 필요. 영향 14건 목록을 첨부할 것. 같은 증상 VOC가 추가로 들어오면 이 티켓에 병합.</div></div>
+    <div class="sec full"><h4>답변 초안</h4>
+      <div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 어제(11/2) 사용하신 법인카드 내역은 오늘 새벽 카드사 연동이 지연되어 아직 불러와지지 않았습니다.
+개발팀에 긴급 처리를 요청했으며, 오늘 오후 중 반영되면 이 티켓으로 다시 안내드리겠습니다.
+같은 증상을 겪고 계신 다른 팀원분들 건(총 14건)도 함께 처리됩니다.</div></div></div>
+  </div>
+</div>
+
+<div class="card" id="VOC-2611-013">
+  <div class="card-head">
+    <span class="no">VOC-2611-013</span>
+    <span class="title">로그인이 안 됩니다</span>
+    <span class="badge b-type">계정 잠금</span>
+    <span class="badge p-high">높음</span>
+    <span class="meta">서지안 · 영업1팀 · 08:20 접수</span>
+  </div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">비밀번호를 여러 번 틀린 뒤로 로그인이 안 됩니다. 11시에 출장 출발이라 그 전에 지난 출장 정산을 올려야 합니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>카테고리 일치(로그인/계정). 우선순위 <b>높음</b> 유지. 요청자 기한(11시 출발)이 SLA보다 빠름.</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4>
+      <ul><li>사용자 정보: 계정 상태 <code>LOCKED</code>, 로그인 실패 5회</li>
+      <li>로그인 로그: 11/02 18:41~18:44 <code>E-AUTH-401</code> 4건, 이후 <code>E-AUTH-423</code></li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>비밀번호 5회 오입력으로 자동 잠금. 본인 확인 후 잠금 해제하고 실패 횟수를 초기화.</p></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">잠금 해제 전 메신저로 본인 확인 필요. 처리 기한이 임박(10:20)했으니 가장 먼저 처리.</div></div>
+    <div class="sec full"><h4>답변 초안</h4>
+      <div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 계정 잠금을 해제했으니 지금 바로 로그인하실 수 있습니다.
+비밀번호가 5회 연속 맞지 않아 보안 정책에 따라 계정이 자동으로 잠겨 있었습니다.
+비밀번호가 기억나지 않으시면 로그인 화면의 '비밀번호 초기화'를 이용해 주세요. 출장 잘 다녀오세요.</div></div></div>
+  </div>
+</div>
+
+<div class="card" id="VOC-2611-014">
+  <div class="card-head">
+    <span class="no">VOC-2611-014</span>
+    <span class="title">영수증 첨부하면 오류가 납니다</span>
+    <span class="badge b-type">첨부파일 형식</span>
+    <span class="badge p-mid">보통</span>
+    <span class="meta">노태윤 · 연구2팀 · 09:05 접수</span>
+  </div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">휴대폰으로 찍은 영수증 사진을 올리면 '처리 중 오류가 발생했습니다'가 뜹니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>요청자 카테고리 <b>오류</b> → <b>첨부파일 형식</b>으로 재분류. 우선순위 보통 유지.</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4>
+      <ul><li>에러 로그 09:01, 09:03 <code>E-FILE-415</code> unsupported type (.heic)</li>
+      <li>화면에는 공통 오류 메시지로 표시됨</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>아이폰 기본 사진 형식(HEIC)은 지원하지 않음. JPG·PNG·PDF로 변환해 올리도록 안내.</p></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">VOC-2611-016(팀장 문의)이 같은 건이므로 이 티켓을 대표로 처리.</div></div>
+    <div class="sec full"><h4>답변 초안</h4>
+      <div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 휴대폰 사진이 HEIC 형식으로 저장되어 첨부가 되지 않았습니다.
+JPG, PNG, PDF 형식으로 올려 주시면 정상적으로 첨부됩니다.
+아이폰은 [설정 > 카메라 > 포맷]에서 '높은 호환성'을 선택하면 이후 사진이 JPG로 저장됩니다.</div></div></div>
+  </div>
+</div>
+
+<div class="card" id="VOC-2611-015">
+  <div class="card-head">
+    <span class="no">VOC-2611-015</span>
+    <span class="title">출장비 정산 승인이 안 됩니다</span>
+    <span class="badge b-type">결재선(대결자)</span>
+    <span class="badge p-mid">보통</span>
+    <span class="meta">권나래 · 영업2팀 · 09:20 접수</span>
+  </div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">지난주 수요일에 올린 정산이 계속 승인 대기입니다. 언제 승인되나요?</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>카테고리 일치(결재). 우선순위 보통 유지.</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4>
+      <ul><li>정산 이력: 현재 승인자가 영업2팀장, 6일째 승인 대기</li>
+      <li>사용자 정보: 승인자 계정은 사용 중이나 근태상 10/29~11/07 휴가, 대결자 미지정</li>
+      <li>같은 승인자에게 대기 중인 정산 3건</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>승인자 휴가 중이고 대결자가 지정되지 않음. 부서장 확인 후 대결자를 지정하고, 대기 3건을 함께 넘김.</p></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">대결자는 운영담당이 임의로 정하지 않음. 영업본부장실에 대결자 확인 요청 필요.</div></div>
+    <div class="sec full"><h4>답변 초안</h4>
+      <div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 승인자이신 팀장님이 11/7까지 휴가 중이신데 대결자가 지정되지 않아 승인이 멈춰 있었습니다.
+본부에 대결자를 확인하고 있으며, 지정되는 대로 오늘 중 승인 단계로 넘기겠습니다.
+같은 상황인 팀 내 다른 정산 2건도 함께 처리하겠습니다.</div></div></div>
+  </div>
+</div>
+
+<div class="card" id="VOC-2611-016">
+  <div class="card-head">
+    <span class="no">VOC-2611-016</span>
+    <span class="title">팀원 영수증 첨부 오류 확인 부탁드립니다</span>
+    <span class="badge b-type">중복 VOC</span>
+    <span class="badge p-mid">보통</span>
+    <span class="badge b-flag">병합 → 014</span>
+    <span class="meta">홍예준 · 연구2팀 · 09:40 접수</span>
+  </div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">저희 팀 노태윤 프로가 영수증을 못 올리고 있다고 합니다. 확인 부탁드립니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>요청자 카테고리 <b>오류</b> → <b>중복 VOC</b>로 재분류. 팀장 문의라 보통 유지(대표 티켓 우선순위를 따름).</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4><ul><li>VOC-2611-014와 대상 사용자·증상이 같음</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>선행 티켓과 같은 건. VOC-2611-014에 병합하고 처리 결과는 대표 티켓으로 안내.</p></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">병합 처리. 별도 조치 없음.</div></div>
+    <div class="sec full"><h4>답변 초안</h4>
+      <div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 같은 내용으로 노태윤 프로님이 접수한 건(VOC-2611-014)이 있어 함께 처리했습니다.
+휴대폰 사진 형식(HEIC) 문제로, JPG·PNG·PDF로 올리시면 정상 첨부되도록 안내드렸습니다.</div></div></div>
+  </div>
+</div>
+
+<div class="card" id="VOC-2611-018">
+  <div class="card-head">
+    <span class="no">VOC-2611-018</span>
+    <span class="title">해외 출장비 환율이 이상하게 계산됩니다</span>
+    <span class="badge b-type">기준정보</span>
+    <span class="badge p-mid">보통</span>
+    <span class="meta">장민혁 · 연구1팀 · 10:02 접수</span>
+  </div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">11/2 사용한 달러 경비가 원화로 바뀔 때 금액이 지난주 환율로 계산되는 것 같습니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>요청자 카테고리 <b>오류</b> → <b>기준정보</b>로 재분류. 우선순위 보통 유지.</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4>
+      <ul><li>환율 기준정보: USD 최종 등록일 10/30, 11/02 환율 없음</li>
+      <li>미등록일 사용분은 직전 등록 환율로 계산되는 구조</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>11/02 환율이 등록되지 않아 직전 환율로 계산됨. 환율 등록은 재무팀 권한이라 재무팀에 이관.</p></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">재무팀 이관. 등록 후 해당 정산은 재계산이 필요하니 요청자가 '재계산'을 눌러야 함을 안내에 포함.</div></div>
+    <div class="sec full"><h4>답변 초안</h4>
+      <div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 11/2자 달러 환율이 아직 등록되지 않아 직전 환율(10/30)로 계산되고 있었습니다.
+환율 등록을 재무팀에 요청했으며, 오늘 중 등록될 예정입니다.
+등록 안내를 받으시면 정산 화면에서 '재계산' 버튼을 한 번 눌러 주세요.</div></div></div>
+  </div>
+</div>
+
+<div class="card" id="VOC-2611-017">
+  <div class="card-head">
+    <span class="no">VOC-2611-017</span>
+    <span class="title">월별 경비 통계 화면을 만들어 주세요</span>
+    <span class="badge b-type">개선 요청</span>
+    <span class="badge p-low">낮음</span>
+    <span class="meta">유다인 · 인사팀 · 10:05 접수</span>
+  </div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">팀별 월간 출장비를 매달 수작업으로 합산하고 있습니다. 월별 통계 화면이 있으면 좋겠습니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>요청자 카테고리 <b>기타</b> → <b>개선 요청</b>으로 재분류. 장애가 아니라 낮음 유지.</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4><ul><li>해당 없음 (기능 추가 요청)</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>VOC 처리 대상이 아님. 개선요청 게시판으로 이관하고 감사 인사와 이관 사실을 안내.</p></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">개선요청 게시판 이관. 분기 개선 검토 회의 안건으로 등록.</div></div>
+    <div class="sec full"><h4>답변 초안</h4>
+      <div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 좋은 의견 감사합니다.
+말씀하신 월별 경비 통계 화면은 기능 개선 요청으로 접수해 다음 분기 개선 검토 회의(12월)에서 논의하겠습니다.
+진행 상황은 개선요청 게시판에서 확인하실 수 있습니다.</div></div></div>
+  </div>
+</div>
+
+<footer>※ 실습용 결과물 샘플입니다. 시스템·인물·데이터는 모두 가상입니다. 답변 초안은 담당자 검토 후 등록합니다.</footer>
+</div>
+
+<script>
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.parentElement.querySelector('.answer-text').innerText;
+      var done = function () { btn.textContent = '복사됨'; setTimeout(function () { btn.textContent = '복사'; }, 1500); };
+      try {
+        navigator.clipboard.writeText(text).then(done, function () {});
+      } catch (e) {}
+    });
+  });
+</script>
+</body>
+</html>

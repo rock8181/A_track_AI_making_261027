@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VOC 처리 검토 보고서</title><style>
+:root{--bg:#f5f6f8;--surface:#fff;--surface-2:#f0f2f5;--border:#dfe3e8;--text:#1d2330;--muted:#5d6675;--accent:#2457c5;
+--high:#c62828;--high-bg:#fdecea;--mid:#a15c00;--mid-bg:#fff4e0;--low:#2e7d32;--low-bg:#e8f5e9;--info-bg:#e8effc;--warn-bg:#fff8e1;--warn:#8a6100}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171c;--surface:#1d2128;--surface-2:#262b33;--border:#353b45;--text:#e6e9ee;--muted:#9aa3b0;--accent:#7aa2f7;
+--high:#ff8a80;--high-bg:#3a1f1f;--mid:#ffc46b;--mid-bg:#3a2e18;--low:#81c784;--low-bg:#1e3321;--info-bg:#1f2a40;--warn-bg:#3a3218;--warn:#ffd166}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;font-size:15px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:32px 16px 64px}header h1{margin:0 0 4px;font-size:26px}header p{margin:0;color:var(--muted)}
+h2{font-size:18px;margin:36px 0 12px}.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:20px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px}.stat .label{color:var(--muted);font-size:13px}
+.stat .value{font-size:28px;font-weight:700}.stat .sub{font-size:13px;color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:760px){.two{grid-template-columns:1fr}}
+.typebar{display:flex;flex-wrap:wrap;gap:6px}.chip{display:inline-block;padding:2px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:13px}tr:last-child td{border-bottom:0}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+.badge{display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700;white-space:nowrap}
+.p-high{color:var(--high);background:var(--high-bg)}.p-mid{color:var(--mid);background:var(--mid-bg)}.p-low{color:var(--low);background:var(--low-bg)}
+.b-type{color:var(--accent);background:var(--info-bg)}.b-flag{color:var(--warn);background:var(--warn-bg)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden}
+.card.failed{border:2px solid var(--high)}
+.card-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline}
+.card-head .no{font-weight:700;font-family:Consolas,monospace}.card-head .title{font-weight:700;font-size:16px;flex:1 1 280px}.card-head .meta{color:var(--muted);font-size:13px}
+.card-body{padding:16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:14px 24px}@media (max-width:760px){.card-body{grid-template-columns:1fr}}
+.full{grid-column:1/-1}.sec h4{margin:0 0 4px;font-size:13px;color:var(--muted);font-weight:600}.sec ul{margin:0;padding-left:18px}.sec p{margin:0}
+.voc{background:var(--surface-2);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--muted)}
+.note{border-left:3px solid var(--warn);background:var(--warn-bg);padding:8px 12px;border-radius:0 8px 8px 0}
+.note.bad{border-left-color:var(--high);background:var(--high-bg)}
+.answer{position:relative;border:1px solid var(--border);border-radius:8px;padding:12px 14px;background:var(--surface);white-space:pre-line}
+.copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer}
+.copy:hover{border-color:var(--accent)}.answer-text{padding-right:56px}footer{margin-top:32px;color:var(--muted);font-size:13px}
+</style></head>
+<body><div class="wrap">
+<header><h1>VOC 처리 검토 보고서</h1>
+<p>2026-10-27 16:53 기준 · 접수 VOC 10건 · 작성: VOC 처리 Agent (검토 대기)</p></header>
+<div class="stats">
+  <div class="stat"><div class="label">오늘 접수</div><div class="value">10건</div><div class="sub">08:12 ~ 10:11 접수</div></div>
+  <div class="stat"><div class="label">우선순위 높음</div><div class="value" style="color:var(--high)">3건</div><div class="sub">보통 5 · 낮음 2</div></div>
+  <div class="stat"><div class="label">직접 조치</div><div class="value">4건</div><div class="sub">확인 후 처리 가능</div></div>
+  <div class="stat"><div class="label">이관 필요</div><div class="value">2건</div><div class="sub">개발팀 · 개선요청 게시판</div></div>
+  <div class="stat"><div class="label">카테고리 재분류</div><div class="value">7건</div><div class="sub">요청자 선택과 다름</div></div>
+  
+</div>
+<h2>오늘 VOC 현황</h2>
+<div class="two">
+  <div class="panel"><h4 style="margin:0 0 10px">처리 유형별</h4><div class="typebar"><span class="chip">계정 잠금 1</span><span class="chip">권한 부족 1</span><span class="chip">결재선 오류 1</span><span class="chip">기준정보 미등록 1</span><span class="chip">첨부파일 용량 1</span><span class="chip">단순 문의 1</span><span class="chip">배치 오류 1</span><span class="chip">개선 요청 1</span><span class="chip">중복 요청 1</span><span class="chip">중복 VOC 1</span></div></div>
+  <div class="panel"><h4 style="margin:0 0 10px">우선순위별</h4><div class="typebar"><span class="badge p-high">높음 3</span> <span class="badge p-mid">보통 5</span> <span class="badge p-low">낮음 2</span></div>
+  <p style="margin:10px 0 0;font-size:13px;color:var(--muted)">처리 기한: 높음 2시간 이내 · 보통 당일 · 낮음 3영업일 이내</p></div>
+</div>
+<h2>먼저 볼 건</h2>
+<div class="panel"><table><tr><th style="width:130px">티켓</th><th>내용</th><th style="width:150px">우선순위</th><th style="width:170px">처리 기한</th></tr><tr><td><a href="#VOC-2610-031">VOC-2610-031</a></td><td>품질팀 최지은 로그인 불가(계정 LOCKED, 실패 5회) - 오늘 오전 중 구매요청 필요</td><td><span class="badge p-high">높음</span></td><td>10-27 10:12까지 <span class="badge p-high">기한 초과</span></td></tr><tr><td><a href="#VOC-2610-037">VOC-2610-037</a></td><td>구매팀 이서연 어제 결재 완료 건들이 &#x27;발주 완료&#x27;로 갱신되지 않음(BAT-ORDER-SYNC 확인 필요)</td><td><span class="badge p-high">높음</span></td><td>10-27 11:40까지 <span class="badge p-high">기한 초과</span></td></tr><tr><td><a href="#VOC-2610-039">VOC-2610-039</a></td><td>생산기술팀 한승우 팀장 결재함에 김민수 디지털 캘리퍼 구매요청 2건 중복</td><td><span class="badge p-high">높음 ↑ (요청: 보통)</span></td><td>10-27 12:05까지 <span class="badge p-high">기한 초과</span></td></tr></table></div>
+<h2>내가 할 조치 / 이관 목록</h2>
+<div class="two">
+  <div class="panel"><h4 style="margin:0 0 6px">직접 조치</h4><table><tr><th style="width:120px">티켓</th><th>조치</th><th style="width:110px">선행 조건</th></tr><tr><td><a href="#VOC-2610-031">VOC-2610-031</a></td><td>U1004 최지은 본인 확인 후 계정 잠금 해제 및 실패 횟수 초기화 (오늘 오전 구매요청 기한으로 우선 처리)</td><td>본인 확인 (메신저 또는 전화, 본인 아닌 사람의 요청으로는 해제하지 않음)</td></tr><tr><td><a href="#VOC-2610-033">VOC-2610-033</a></td><td>INACTIVE 결재자 U1006의 대기 건 2건(PR-26100411, PR-26100412)을 생산관리팀 현 결재자 U1013으로 결재선 재지정</td><td>-</td></tr><tr><td><a href="#VOC-2610-039">VOC-2610-039</a></td><td>요청자(김민수) 확인 후 중복 구매요청 PR-26100426(나중 건) 취소, 결재자에게 PR-26100425 1건만 결재 안내</td><td>요청자(김민수, U1001) 확인 - 결재자가 문의한 건이지만 취소 전 요청자에게 먼저 확인</td></tr><tr><td><a href="#VOC-2610-040">VOC-2610-040</a></td><td>VOC-2610-032 대표 티켓에 병합</td><td>-</td></tr></table></div>
+  <div class="panel"><h4 style="margin:0 0 6px">이관</h4><table><tr><th style="width:120px">티켓</th><th>이관처</th><th>전달 내용</th></tr><tr><td><a href="#VOC-2610-037">VOC-2610-037</a></td><td>개발팀</td><td>BAT-ORDER-SYNC 2026-10-27 02:00 실패, E-BAT-102 &#x27;ERP interface timeout (30s) - 0/3 records synced&#x27;. 영향 구매요청: PR-26100418, PR-26100419, PR-26100420 (모두 APPROVED 유지). 관련 로그: L-880170, L-880171, L-880172, L-880173. 요청 사항: ERP 발주 반영 여부 확인, 타임아웃 원인 확인 및 배치 재처리. 접수 VOC: VOC-2610-037(구매팀 이서연, 우선순위 높음, SLA 2시간).</td></tr><tr><td><a href="#VOC-2610-038">VOC-2610-038</a></td><td>개선요청 게시판</td><td>구매요청 목록 엑셀 다운로드 기능 요청</td></tr></table></div>
+</div>
+<h2>티켓별 검토</h2>
+
+<div class="card" id="VOC-2610-031">
+  <div class="card-head"><span class="no">VOC-2610-031</span><span class="title">로그인이 안 됩니다</span>
+    <span class="badge b-type">계정 잠금</span><span class="badge p-high">높음</span>
+    <span class="meta">최지은 · 품질팀 · 08:12 접수 · 기한 10-27 10:12</span></div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">금요일 퇴근 전에 비밀번호를 몇 번 틀렸는데 오늘 아침부터 로그인이 아예 안 됩니다. 오늘 오전 중에 구매요청을 올려야 해서 급합니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>카테고리 유지(<b>로그인/계정</b>). 접수 우선순위 높음 유지. 요청자가 &#x27;오늘 오전 중&#x27; 구매요청 기한을 적어 SLA(2시간)보다 이 기한을 우선함</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4><ul><li>users: U1004(최지은, 품질팀) status=LOCKED, login_fail_count=5</li><li>users: U1004 last_login_at=2026-10-23 17:55 (요청자가 말한 &#x27;금요일 퇴근 전&#x27; 시점과 일치)</li><li>code_master USER_STATUS LOCKED remark=&#x27;로그인 5회 실패 시 자동 잠금&#x27;</li><li>error_log: 확인 불가 (조회 기간 2026-10-24 08:12 ~ 2026-10-27 08:12 안에 U1004 로그 없음. 잠금 시점 10-23 17:55가 조회 기간 밖이라 E-AUTH-423 로그는 확인하지 못함)</li><li>users: U1004 pw_changed_at=2026-08-11 (77일 경과, 90일 변경 주기 안이므로 비밀번호 만료는 원인이 아님)</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>비밀번호를 5회 연속 잘못 입력해 계정이 자동 잠금(status=LOCKED)된 상태입니다. 사용자 상태값과 실패 횟수로 확인했고, 잠금 시점의 에러 로그(E-AUTH-423)는 조회 기간 밖이라 확인하지 못했습니다.</p><ul><li>메신저 또는 전화로 U1004(최지은) 본인 확인</li><li>운영자 화면 [계정 관리 &gt; 잠금 해제]에서 U1004 잠금 해제</li><li>로그인 실패 횟수를 0으로 초기화</li><li>요청자에게 해제 사실과 재로그인 방법을 안내하고, 비밀번호가 기억나지 않으면 로그인 화면의 &#x27;비밀번호 초기화&#x27;를 쓰도록 안내</li></ul></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">선행 조건: 본인 확인 (메신저 또는 전화, 본인 아닌 사람의 요청으로는 해제하지 않음)<br>요청자가 &#x27;오늘 오전 중&#x27; 구매요청 기한을 적었으므로 SLA(높음 2시간)보다 이 기한을 먼저 맞춰야 함<br>context의 batch_logs(L-880170~L-880173, BAT-ORDER-SYNC E-BAT-102, 영향 건 PR-26100418/PR-26100419/PR-26100420)는 이 티켓과 원인이 다르고 U1004의 구매요청도 아님. U1004의 PR-26100421은 이미 ORDERED 상태로 배치 영향 없음. 이 배치 실패는 별도 건으로 개발팀 이관이 필요하며 이 티켓의 조치에는 넣지 않음<br>잠금 해제는 제안만 하며 실제 해제는 담당자가 본인 확인 후 진행</div></div>
+    <div class="sec full"><h4>답변 초안</h4><div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요, 최지은 님. OPS-PR 운영담당입니다.
+
+본인 확인을 마친 뒤 계정 잠금을 풀어 드렸으며, 지금 바로 다시 로그인하실 수 있습니다.
+
+원인: 시스템은 보안을 위해 비밀번호가 연속 5회 맞지 않으면 계정을 자동으로 잠그도록 되어 있습니다. 지난 금요일(10/23) 로그인 과정에서 이 기준에 해당되어 계정이 잠금 상태로 바뀌었고, 그래서 오늘 아침부터 로그인이 되지 않았습니다. 비밀번호 사용 기간이 지난 것은 아니어서 그 밖의 다른 문제는 없습니다.
+
+조치 결과: 메신저(또는 전화)로 본인 확인을 마친 뒤 계정 잠금을 해제했고, 로그인 실패 횟수도 처음부터 다시 셀 수 있도록 초기화했습니다.
+
+요청드릴 사항:
+1. 기존 비밀번호로 다시 로그인해 주세요.
+2. 비밀번호가 기억나지 않으시면 여러 번 시도하지 마시고 로그인 화면의 &#x27;비밀번호 초기화&#x27;로 새 비밀번호를 설정해 주세요.
+3. 로그인 후 오늘 오전 중 올리셔야 하는 구매요청을 진행하시면 됩니다. 그래도 로그인이 되지 않으면 이 티켓에 회신해 주시거나 운영담당에게 바로 연락해 주세요.
+
+감사합니다.</div></div><p style="margin-top:6px;font-size:13px;color:var(--muted)">답변 검토: 검토 통과 · 재작성 0회</p></div>
+  </div>
+</div>
+<div class="card" id="VOC-2610-037">
+  <div class="card-head"><span class="no">VOC-2610-037</span><span class="title">결재 완료 건 발주 상태가 갱신되지 않음</span>
+    <span class="badge b-type">배치 오류</span><span class="badge p-high">높음</span>
+    <span class="meta">이서연 · 구매팀 · 09:40 접수 · 기한 10-27 11:40</span></div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">어제 결재 완료된 건들이 오늘 아침에도 &#x27;결재 완료&#x27;로만 보이고 &#x27;발주 완료&#x27;로 바뀌지 않았습니다. ERP에는 발주가 들어갔는지 확인 부탁드립니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>요청자 카테고리 <b>오류</b> → <b>배치 오류</b>로 재분류. 접수 우선순위 높음 유지. 배치 오류는 영향 범위가 커 가장 먼저 처리하고, 구매팀 VOC라 한 단계 상향 기준에도 해당</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4><ul><li>batch_log L-880170 10-27 02:00 BAT-ORDER-SYNC E-BAT-102 &#x27;ERP interface timeout (30s) - 0/3 records synced&#x27;</li><li>batch_log L-880171 10-27 02:00 BAT-ORDER-SYNC E-BAT-102 req_id=PR-26100418 &#x27;sync failed: status remains APPROVED&#x27;</li><li>batch_log L-880172 10-27 02:00 BAT-ORDER-SYNC E-BAT-102 req_id=PR-26100419 &#x27;sync failed: status remains APPROVED&#x27;</li><li>batch_log L-880173 10-27 02:00 BAT-ORDER-SYNC E-BAT-102 req_id=PR-26100420 &#x27;sync failed: status remains APPROVED&#x27;</li><li>code_master PR_STATUS ORDERED remark=&#x27;BAT-ORDER-SYNC가 ERP 발주 결과로 갱신&#x27;, APPROVED=&#x27;결재 완료(발주 대기)&#x27;</li><li>purchase_requests: U1002 본인 요청 PR-26100427 status=ORDERED, updated_at=2026-10-24 02:00 (이번 실패와 무관, 이미 발주 완료)</li><li>error_logs: 조회 기간(10-24 09:40 ~ 10-27 09:40) 내 화면 에러 없음</li><li>users: U1002 이서연 구매팀 PURCHASER, status=ACTIVE (계정 문제 아님)</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>10-27 02:00 BAT-ORDER-SYNC 배치가 ERP 인터페이스 타임아웃(30s, E-BAT-102)으로 실패해 대상 3건(PR-26100418/419/420)이 APPROVED(결재 완료)에 머물러 있습니다. ERP 측 타임아웃의 근본 원인(ERP 점검·지연 등)은 context에서 확인 불가합니다.</p><ul><li>개발팀에 BAT-ORDER-SYNC 실패(E-BAT-102, 10-27 02:00, ERP interface timeout) 장애 티켓 생성·이관</li><li>영향 구매요청 3건(PR-26100418, PR-26100419, PR-26100420) 목록과 batch_log L-880170~L-880173을 함께 전달</li><li>ERP 실제 발주 반영 여부 확인 및 배치 재실행은 개발팀이 수행(운영담당은 재실행하지 않음)</li><li>개발팀 재처리 후 3건이 ORDERED로 갱신되었는지 확인하고 요청자(U1002)에게 결과 안내</li></ul></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">개발팀 이관. 전달 내용: BAT-ORDER-SYNC 2026-10-27 02:00 실패, E-BAT-102 &#x27;ERP interface timeout (30s) - 0/3 records synced&#x27;. 영향 구매요청: PR-26100418, PR-26100419, PR-26100420 (모두 APPROVED 유지). 관련 로그: L-880170, L-880171, L-880172, L-880173. 요청 사항: ERP 발주 반영 여부 확인, 타임아웃 원인 확인 및 배치 재처리. 접수 VOC: VOC-2610-037(구매팀 이서연, 우선순위 높음, SLA 2시간).<br>배치 재실행·ERP 원인 파악은 운영담당 권한 밖(매뉴얼 7장)이므로 직접 조치로 처리하지 않음<br>요청자는 &#x27;어제 결재 완료된 건들&#x27;이라고 했으나 영향 3건의 요청자·결재일은 context에 없어 VOC 언급 건과 같은지 확인 불가. 요청자 본인 명의 건 PR-26100427은 이미 10-24 ORDERED 상태<br>요청자가 질문한 &#x27;ERP에 발주가 들어갔는지&#x27;는 로그상 0/3 synced로 시스템 갱신 실패만 확인되며, ERP 측 실제 발주 여부는 개발팀 확인 필요(단정 금지)<br>배치 오류는 영향 범위가 커 최우선 처리 대상, 우선순위 높음 SLA 2시간(접수 09:40)</div></div>
+    <div class="sec full"><h4>답변 초안</h4><div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 오늘(10월 27일) 새벽 2시 발주 상태 갱신 작업이 실패해 결재 완료 건이 &#x27;발주 완료&#x27;로 바뀌지 않았고, 개발팀에 장애로 접수해 재처리를 요청했습니다. 새벽 작업 중 ERP 연결이 정해진 시간 안에 응답하지 않아, 대상 구매요청 3건(PR-26100418, PR-26100419, PR-26100420)이 모두 &#x27;결재 완료&#x27; 상태로 남아 있습니다. ERP 연결이 지연된 이유는 아직 확인되지 않았습니다. 해당 3건 목록과 관련 기록을 개발팀에 함께 전달했으며, 개발팀에서 ERP에 실제로 발주가 들어갔는지 확인한 뒤 재처리할 예정입니다. 현재는 시스템의 상태 갱신이 실패한 것까지만 확인되었고, ERP 쪽 발주 반영 여부는 개발팀 확인 결과와 함께 안내드리겠습니다. 개발팀 재처리가 끝나 3건이 &#x27;발주 완료&#x27;로 바뀐 것을 확인하는 대로 이 티켓으로 바로 연락드리겠습니다. 따로 하실 일은 없으며, 말씀하신 건 중 위 3건에 포함되지 않은 구매요청이 있으면 번호를 알려 주시면 함께 확인하겠습니다. 업무에 불편을 드려 죄송합니다.</div></div><p style="margin-top:6px;font-size:13px;color:var(--muted)">답변 검토: 검토 통과 · 재작성 0회</p></div>
+  </div>
+</div>
+<div class="card" id="VOC-2610-039">
+  <div class="card-head"><span class="no">VOC-2610-039</span><span class="title">결재함에 같은 건이 두 번 있습니다</span>
+    <span class="badge b-type">중복 요청</span><span class="badge p-high">높음 ↑ (요청: 보통)</span>
+    <span class="meta">한승우 · 생산기술팀 · 10:05 접수 · 기한 10-27 12:05</span></div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">김민수 프로의 디지털 캘리퍼 구매요청이 결재함에 똑같이 두 건 올라와 있습니다. 둘 다 승인하면 되나요?</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>요청자 카테고리 <b>결재</b> → <b>중복 요청</b>로 재분류. 접수 우선순위 보통에서 상향. 팀장(APPROVER)이 올린 VOC는 한 단계 높여 봄</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4><ul><li>purchase_requests: PR-26100425 requester_id=U1001, item_code=ITM-20431, qty=1, amount=1600000, status=PENDING_APPROVAL, current_approver_id=U1012, created_at=2026-10-26 15:21:07</li><li>purchase_requests: PR-26100426 requester_id=U1001, item_code=ITM-20431, qty=1, amount=1600000, status=PENDING_APPROVAL, current_approver_id=U1012, created_at=2026-10-26 15:21:08 (PR-26100425와 생성 간격 1초)</li><li>error_log L-880150 10-26 15:21 U1001 PR-26100425 PR_CREATE W-PR-DUP &#x27;duplicate submit detected (interval=1s) - not blocked&#x27;</li><li>code_master: ITM-20431 = 정밀 디지털 캘리퍼, use_yn=Y</li><li>users: U1001 김민수 생산기술팀 REQUESTER status=ACTIVE / U1012 한승우 생산기술팀 APPROVER status=ACTIVE (결재자 계정 정상)</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>요청자 김민수(U1001)가 구매요청 저장 버튼을 중복 클릭해 동일 품목·수량·금액의 구매요청이 1초 간격으로 2건(PR-26100425, PR-26100426) 생성되었습니다. 시스템이 중복 제출을 감지(W-PR-DUP)했으나 차단하지 않아 두 건 모두 결재자 한승우(U1012) 결재함에 올라갔습니다.</p><ul><li>요청자 김민수(U1001)에게 PR-26100425·PR-26100426이 중복 제출된 같은 요청인지(실제로 2건이 필요한 것이 아닌지) 확인</li><li>요청자가 중복으로 확인하면 나중에 생성된 PR-26100426을 CANCELED 처리 (PR-26100425는 유지)</li><li>결재자 한승우(U1012)에게 둘 다 승인하지 말고 남은 PR-26100425 1건만 결재하도록 안내 (요청자 확인 전까지 두 건 모두 결재 보류 요청)</li></ul></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">선행 조건: 요청자(김민수, U1001) 확인 - 결재자가 문의한 건이지만 취소 전 요청자에게 먼저 확인<br>W-PR-DUP 로그(L-880150)의 req_id는 PR-26100425로 기록되어 있으나, 매뉴얼 4장 기준 취소 대상은 생성 시각이 늦은 PR-26100426입니다.<br>결재자가 두 건을 모두 승인하면 같은 품목이 이중 발주될 수 있으므로 요청자 확인 전까지 결재 보류를 요청합니다.<br>같은 요청자의 PR-26100418(ITM-20431, qty=2, APPROVED)은 이번 중복 건과 별개입니다. 이 건은 10-27 02:00 BAT-ORDER-SYNC 실패(E-BAT-102, L-880170·L-880171)로 APPROVED에 머물러 있으며, 같은 배치에서 PR-26100419·PR-26100420도 영향을 받았습니다. 이번 VOC의 조치 대상은 아니며 배치 장애는 별도로 개발팀 이관 대상입니다(운영담당 재실행 금지).<br>U1001의 E-FILE-413 로그(L-880161, L-880162, 10-26 16:12·16:14)는 이번 중복 건과 관계없습니다.<br>저장 중복 클릭 방지 미적용(차단 안 됨)은 재발 요인이므로 필요하면 개선 요청으로 별도 접수를 검토합니다.</div></div>
+    <div class="sec full"><h4>답변 초안</h4><div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 결재함의 두 건은 같은 구매요청이 중복으로 올라간 것이므로 둘 다 승인하지 마시고, 정리될 때까지 두 건 모두 결재를 잠시 보류해 주시기 바랍니다. 김민수 프로님의 정밀 디지털 캘리퍼 구매요청(수량 1개, 160만 원)이 10월 26일 15시 21분에 저장될 때 1초 간격으로 두 번 처리되었는데, 시스템이 이를 걸러내지 못해 PR-26100425와 PR-26100426 두 건이 팀장님 결재함에 함께 올라갔습니다. 두 건을 모두 승인하시면 같은 품목이 두 번 발주될 수 있습니다. 현재 김민수 프로님께 실제로 필요한 요청이 1건인지 확인하고 있으며, 중복으로 확인되면 나중에 올라온 PR-26100426을 취소하겠습니다. 취소가 끝나면 다시 안내드릴 테니, 그때 결재함에 남은 PR-26100425 1건만 결재해 주시면 됩니다.</div></div><p style="margin-top:6px;font-size:13px;color:var(--muted)">답변 검토: 검토 통과 · 재작성 0회</p></div>
+  </div>
+</div>
+<div class="card" id="VOC-2610-032">
+  <div class="card-head"><span class="no">VOC-2610-032</span><span class="title">부서 구매요청 현황 화면 접속 시 오류</span>
+    <span class="badge b-type">권한 부족</span><span class="badge p-mid">보통</span>
+    <span class="meta">정해린 · 설비팀 · 09:08 접수 · 기한 10-27 18:00</span></div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">구매요청 &gt; 부서 현황 메뉴를 누르면 &#x27;권한이 없습니다&#x27; 메시지가 나옵니다. 지난주까지는 됐던 것 같은데 시스템 오류인가요?</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>요청자 카테고리 <b>오류</b> → <b>권한 부족</b>로 재분류. 접수 우선순위 보통 유지. 기한 언급 없고 REQUESTER 1인 건</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4><ul><li>users: U1005(정해린, 설비팀) role=REQUESTER, extra_permission 비어 있음, status=ACTIVE, login_fail_count=0</li><li>error_log L-880190 10-27 09:03 U1005 PR_DEPT_STATUS E-AUTH-403 &#x27;permission denied: DEPT_VIEW required&#x27;</li><li>error_log L-880191 10-27 09:06 U1005 PR_DEPT_STATUS E-AUTH-403 &#x27;permission denied: DEPT_VIEW required&#x27;</li><li>code_master PERMISSION DEPT_VIEW(부서 구매요청 현황 조회) remark=&#x27;팀장 승인 후 부여&#x27;</li><li>dept_active_approvers: U1003(박준호, 설비팀) role=APPROVER, status=ACTIVE (승인 주체가 될 현 팀장)</li><li>지난주까지 됐다는 진술에 대한 권한 변경 이력: 확인 불가 (조회 기간 2026-10-24 09:08 ~ 2026-10-27 09:08 안에 관련 로그 없음)</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>요청자 U1005가 REQUESTER 역할로 부서 구매요청 현황 조회 권한(DEPT_VIEW)을 갖고 있지 않아 접근이 막힌 것입니다(E-AUTH-403). 시스템 오류가 아니라 권한 정책에 따른 정상 동작입니다.</p><ul><li>요청자에게 &#x27;권한이 없습니다&#x27; 메시지는 DEPT_VIEW 권한 미보유 때문이며 시스템 오류가 아님을 안내</li><li>권한 신청 절차 안내: 설비팀 팀장(U1003 박준호) 승인 메일을 첨부해 권한 신청서 제출</li><li>팀장 승인 메일이 첨부된 신청서를 받으면 운영담당이 U1005에 DEPT_VIEW 권한 부여(사람이 수행)</li><li>병합 대상 VOC-2610-040(팀장 접수 건)에도 대표 티켓 VOC-2610-032 기준으로 같은 처리 결과 공유</li></ul></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">선행 조건: 팀장(U1003 박준호) 승인 메일이 첨부된 권한 신청서 접수<br>팀장 승인 없이 DEPT_VIEW를 임의로 부여하지 않음(매뉴얼 2장). 팀장이 VOC-2610-040을 올린 것만으로는 승인 메일로 보지 않음<br>&#x27;지난주까지 됐다&#x27;는 진술을 뒷받침할 권한 보유·회수 이력은 context에 없음. 확인이 필요하면 권한 변경 이력을 별도로 조회해야 함<br>별건: 요청자의 PR-26100419(APPROVED)가 10-27 02:00 BAT-ORDER-SYNC 실패(L-880172, E-BAT-102) 영향 건임(같은 실패 건 PR-26100418, PR-26100420, L-880170 0/3 synced). 이 VOC 증상과는 무관하며 배치 실패는 개발팀 이관 대상이므로 해당 배치 VOC에서 처리<br>답변에는 테이블·컬럼명(extra_permission 등)을 쓰지 않음</div></div>
+    <div class="sec full"><h4>답변 초안</h4><div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 문의하신 &#x27;권한이 없습니다&#x27; 메시지는 시스템 오류가 아니며, 화면 조회 권한을 신청하시면 해결됩니다. 구매요청 &gt; 부서 현황 화면은 &#x27;부서 구매요청 현황 조회&#x27; 권한이 있어야 볼 수 있는데, 확인해 보니 현재 계정에는 이 권한이 등록되어 있지 않아 접속이 제한되었습니다. 이 권한은 보안 정책상 팀장님 승인을 받은 뒤에 부여하도록 되어 있어 아직 별도 조치는 하지 않았습니다. 설비팀 박준호 팀장님의 승인 메일을 첨부해 권한 신청서를 올려주시면 확인 후 바로 권한을 부여해 드리겠습니다. 팀장님께서 같은 내용으로 접수해 주신 문의도 이 건으로 함께 처리하겠습니다. 지난주까지 이용하셨던 이력은 이번에 확인한 범위에서는 찾지 못했으니, 추가 확인이 필요하시면 말씀해 주세요.</div></div><p style="margin-top:6px;font-size:13px;color:var(--muted)">답변 검토: 검토 통과 · 재작성 0회</p></div>
+  </div>
+</div>
+<div class="card" id="VOC-2610-033">
+  <div class="card-head"><span class="no">VOC-2610-033</span><span class="title">결재 올린 건이 며칠째 그대로입니다</span>
+    <span class="badge b-type">결재선 오류</span><span class="badge p-mid">보통</span>
+    <span class="meta">신동혁 · 생산관리팀 · 09:15 접수 · 기한 10-27 18:00</span></div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">23일에 올린 근접 센서 구매요청(PR-26100411)이 아직 결재 대기입니다. 팀장님께 여쭤보니 결재함에 안 보인다고 하십니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>카테고리 유지(<b>결재</b>). 접수 우선순위 보통 유지. 기한 언급 없음(단, 같은 결재자에게 걸린 다른 대기 건 여부를 분석 단계에서 확인 필요)</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4><ul><li>purchase_requests: PR-26100411 status=PENDING_APPROVAL, current_approver_id=U1006, created_at=2026-10-23 14:02, updated_at=2026-10-23 14:02 (생성 후 변경 없음)</li><li>approvers: U1006 강도윤 생산관리팀 APPROVER status=INACTIVE, last_login_at=2026-10-17 18:20</li><li>same_approver_pending: U1006에게 걸린 결재 대기 건 2건 - PR-26100411(요청자 U1010), PR-26100412(요청자 U1009, 2026-10-23 16:10)</li><li>dept_active_approvers: U1013 배수아 생산관리팀 APPROVER status=ACTIVE (재지정 대상 후보)</li><li>users: U1010 신동혁 status=ACTIVE, login_fail_count=0 (요청자 계정 이상 없음)</li><li>error_logs: 조회 기간(2026-10-24 09:15 ~ 2026-10-27 09:15) 내 해당 건 관련 에러 로그 없음</li><li>code_master: USER_STATUS INACTIVE remark=퇴사·부서이동 시 인사 연동으로 변경</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>PR-26100411의 결재자 U1006(강도윤)이 인사 연동으로 INACTIVE 처리되었는데, 기존 결재 대기 건은 자동 이관되지 않아 결재선에 계속 남아 있습니다. 그래서 현재 팀장 결재함에 보이지 않고 결재가 멈춘 상태입니다.</p><ul><li>운영자 화면 [결재 관리 &gt; 결재선 재지정]에서 PR-26100411의 결재자를 U1006에서 생산관리팀 현 APPROVER U1013(배수아)으로 변경</li><li>같은 결재자 U1006에게 걸린 대기 건 PR-26100412(요청자 U1009)도 U1013으로 함께 재지정</li><li>재지정 후 두 건이 U1013 결재함에 보이는지 확인</li><li>요청자 U1010에게 결과 안내, PR-26100412 요청자 U1009에게도 결재선 변경 사실 안내</li></ul></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">VOC에 적힌 PR-26100411만이 아니라 같은 결재자에게 걸린 PR-26100412도 함께 재지정해야 합니다(처리노하우, VOC-2610-009 선례).<br>생산관리팀 ACTIVE APPROVER가 U1013 1명뿐이라 재지정 대상으로 제안합니다. 요청자가 말한 &#x27;팀장님&#x27;이 U1013인지는 context로 확인할 수 없습니다.<br>context의 batch_logs(L-880170~L-880173, E-BAT-102, PR-26100418~20)는 APPROVED→ORDERED 동기화 실패로, 이 티켓(결재 대기 건)과 관련이 없습니다. 이 티켓의 원인으로 쓰지 않습니다.<br>실제 결재선 재지정은 사람(Task 7)이 수행합니다. 보고서에는 제안만 합니다.</div></div>
+    <div class="sec full"><h4>답변 초안</h4><div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 문의하신 근접 센서 구매요청(PR-26100411)의 결재자를 생산관리팀 현 결재자이신 배수아 님으로 다시 지정했고, 이제 정상적으로 결재가 진행될 수 있습니다. 확인해 보니 처음 지정된 결재자분의 계정이 인사 변동으로 사용 중지되었는데, 이 경우 이미 올라가 있던 결재 대기 건이 새 결재자에게 자동으로 넘어가지 않아 23일부터 결재가 멈춰 있었고 팀장님 결재함에도 보이지 않았습니다. 지금은 배수아 님 결재함에 해당 건이 표시되는 것까지 확인했습니다. 요청하신 건은 그대로 유지되므로 다시 올리실 필요는 없으며, 결재가 끝나면 구매요청 화면에서 진행 상태를 확인하실 수 있습니다. 혹시 결재함에서 여전히 보이지 않는다면 이 티켓에 다시 말씀해 주세요.</div></div><p style="margin-top:6px;font-size:13px;color:var(--muted)">답변 검토: 검토 통과 · 재작성 0회</p></div>
+  </div>
+</div>
+<div class="card" id="VOC-2610-034">
+  <div class="card-head"><span class="no">VOC-2610-034</span><span class="title">품목 검색에 토크 센서가 안 나와요</span>
+    <span class="badge b-type">기준정보 미등록</span><span class="badge p-mid">보통</span>
+    <span class="meta">조은비 · 생산기술팀 · 09:24 접수 · 기한 10-27 18:00</span></div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">품목 검색에서 &#x27;토크 센서&#x27;를 입력하면 결과가 없습니다. 지난주에 신규 품목으로 등록 요청했다고 들었는데 아직 안 된 건가요?</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>카테고리 유지(<b>기준정보</b>). 접수 우선순위 보통 유지. 기한 언급 없음</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4><ul><li>error_log L-880195 2026-10-27 09:21 U1011 ITEM_SEARCH I-ITEM-000 &quot;no result for keyword=&#x27;토크 센서&#x27;&quot;</li><li>code_master ITEM ITM-30322 &#x27;토크 센서 TS-200&#x27; use_yn=N, remark=신규 등록 요청(구매팀 검토 중), updated_at=2026-10-24</li><li>users: U1011 조은비 status=ACTIVE, login_fail_count=0 (계정 문제 없음)</li><li>운영매뉴얼 5장: use_yn=N 품목은 검색되지 않음, 신규 품목은 구매팀 승인 후 use_yn=Y (통상 영업일 1일), 운영담당은 use_yn 임의 변경 불가</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>&#x27;토크 센서 TS-200&#x27;(ITM-30322)은 신규 등록 요청이 구매팀 검토 중이라 아직 사용 불가(use_yn=N) 상태여서 품목 검색에 나오지 않습니다. 시스템 오류가 아니라 정상 동작입니다.</p><ul><li>구매팀에 ITM-30322(토크 센서 TS-200) 신규 등록 검토 진행 상황과 완료 예정 시점 확인</li><li>요청자에게 현재 구매팀 검토 중이라 검색되지 않는다는 점과 검토 완료 후 검색 가능하다는 점 안내, 급한 경우 구매팀 직접 문의 안내</li><li>운영담당이 품목 use_yn을 직접 변경하지 않음</li></ul></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">품목 use_yn 변경은 구매팀 권한이므로 운영담당이 Y로 바꾸지 않습니다.<br>등록 요청 기록 갱신일(2026-10-24) 이후 통상 처리 기간(영업일 1일)이 지났을 수 있어 구매팀에 검토 지연 여부를 확인할 필요가 있습니다. 완료 예정일은 context에 없으므로 답변에 날짜를 단정하지 않습니다.<br>이 VOC와 원인은 다르지만, 요청자 U1011의 구매요청 PR-26100420이 2026-10-27 02:00 BAT-ORDER-SYNC 실패(E-BAT-102, L-880173)로 APPROVED에 머물러 있습니다. 같은 배치에서 PR-26100418(L-880171), PR-26100419(L-880172)도 실패했습니다(L-880170 ERP interface timeout, 0/3 synced). 이 배치 장애는 별도로 개발팀 이관 대상이므로, 관련 배치 오류 티켓이 있는지 확인해 그쪽에서 함께 처리해야 합니다. 이 티켓 답변에는 포함하지 않아도 됩니다.</div></div>
+    <div class="sec full"><h4>답변 초안</h4><div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요, 조은비님. OPS-PR 운영담당입니다.
+문의하신 &#x27;토크 센서&#x27; 품목은 신규 등록 요청을 구매팀이 아직 검토하고 있어서 검색되지 않습니다. 구매팀 검토가 끝나면 품목 검색에서 바로 조회하실 수 있습니다.
+
+[원인]
+확인해 보니 &#x27;토크 센서 TS-200&#x27; 품목은 10월 24일에 신규 등록 요청이 접수되어 구매팀이 검토하고 있습니다. 신규 품목은 구매팀 승인이 끝난 뒤부터 검색되기 때문에 지금은 검색 결과가 나오지 않습니다. 시스템 오류나 계정 문제는 아닙니다.
+
+[조치 결과]
+구매팀에 검토 진행 상황과 완료 예정 시점을 확인하고 있으며, 확인되는 대로 다시 안내드리겠습니다.
+
+[요청드릴 사항]
+구매팀 검토가 끝난 뒤 품목 검색에서 &#x27;토크 센서&#x27;로 다시 검색해 주세요. 구매요청 일정이 급하시면 구매팀에 직접 문의하시면 더 빠르게 확인하실 수 있습니다.
+
+감사합니다.</div></div><p style="margin-top:6px;font-size:13px;color:var(--muted)">답변 검토: 검토 통과 · 재작성 0회</p></div>
+  </div>
+</div>
+<div class="card" id="VOC-2610-035">
+  <div class="card-head"><span class="no">VOC-2610-035</span><span class="title">구매요청 저장할 때 시스템 오류</span>
+    <span class="badge b-type">첨부파일 용량</span><span class="badge p-mid">보통</span>
+    <span class="meta">김민수 · 생산기술팀 · 09:30 접수 · 기한 10-27 18:00</span></div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">어제 오후에 구매요청 저장 버튼을 누르면 &#x27;시스템 오류가 발생했습니다(E-SYS-500)&#x27;가 뜨면서 저장이 안 됩니다. 견적서 PDF를 첨부한 상태였습니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>요청자 카테고리 <b>오류</b> → <b>첨부파일 용량</b>로 재분류. 접수 우선순위 보통 유지. 기한 언급 없고 요청자 1인 건</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4><ul><li>error_log L-880161 2026-10-26 16:12 U1001 PR_CREATE E-FILE-413 attachment size exceeded (24.6MB &gt; 20MB)</li><li>error_log L-880162 2026-10-26 16:14 U1001 PR_CREATE E-FILE-413 attachment size exceeded (24.6MB &gt; 20MB)</li><li>error_log L-880161, L-880162 req_id 빈 값: 저장 실패로 구매요청 번호가 만들어지지 않음</li><li>ticket: 화면 메시지 E-SYS-500, 견적서 PDF 첨부 상태에서 저장 실패 (어제 오후 = 2026-10-26 오후, 로그 시각과 맞음)</li><li>운영매뉴얼 6장: 구매요청 1건당 첨부 합계 20MB 제한, 초과 시 로그 E-FILE-413 / 화면 E-SYS-500 표시(알려진 이슈)</li><li>users: U1001 status=ACTIVE, login_fail_count=0 (계정 문제 아님)</li><li>history: VOC-2609-022 같은 증상(E-SYS-500 화면, E-FILE-413 로그) 용량 제한 안내로 처리</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>첨부한 견적서 PDF가 24.6MB로 구매요청 1건당 첨부 한도 20MB를 넘어 저장이 거부되었습니다(로그 E-FILE-413). 화면에 E-SYS-500이 보인 것은 용량 초과를 공통 오류 메시지로 표시하는 알려진 이슈 때문이며, 시스템 장애는 아닙니다.</p><ul><li>요청자에게 첨부 합계 20MB 제한 때문에 저장되지 않았다고 안내 (첨부 파일 24.6MB)</li><li>PDF를 압축하거나 해상도를 낮추거나 여러 파일로 나눠 합계 20MB 이하로 다시 첨부해 저장하도록 안내</li><li>화면에 정확하지 않은 메시지(E-SYS-500)가 표시되는 것은 알려진 이슈라고 안내</li></ul></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">답변에 요청자 탓으로 읽히는 표현을 쓰지 않습니다(노하우). 내부 코드명(테이블·컬럼명)도 쓰지 않습니다.<br>이번 VOC와 원인은 다르지만 같은 요청자(U1001)에게 걸린 별도 사항이 있음: PR-26100425 / PR-26100426이 같은 품목(ITM-20431)·금액(1,600,000)으로 1초 간격(15:21:07 / 15:21:08)으로 만들어졌고 error_log L-880150 W-PR-DUP이 남아 있습니다. 둘 다 결재 대기(결재자 U1012). 중복 요청으로 보이며, 요청자에게 확인한 뒤 나중 건(PR-26100426)을 취소하는 처리를 따로 검토해야 합니다. 요청자 확인 없이 취소하지 않습니다.<br>같은 요청자의 PR-26100418(APPROVED)이 2026-10-27 02:00 BAT-ORDER-SYNC 실패(E-BAT-102, L-880171)로 발주 완료로 바뀌지 않았습니다. 같은 배치에서 PR-26100419, PR-26100420도 실패(L-880172, L-880173, L-880170 ERP interface timeout 0/3 synced). 이번 VOC 원인과는 별개이며, 매뉴얼 7장에 따라 개발팀 이관 대상입니다(운영담당은 재실행하지 않음). 다른 티켓에서 처리되지 않았다면 보고서에서 따로 확인이 필요합니다.<br>E-FILE-413 로그는 16:12와 16:14 두 번만 있습니다. 15:21 PR_CREATE(PR-26100425/26)는 저장되었으므로 이번 오류 건과는 다른 시도입니다.</div></div>
+    <div class="sec full"><h4>답변 초안</h4><div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 문의하신 저장 오류는 시스템 장애가 아니라 첨부파일 용량 한도 때문에 생긴 것으로, 첨부파일을 20MB 이하로 줄여 다시 저장하시면 정상 저장됩니다. 어제(10월 26일) 오후 저장하실 때 첨부된 견적서 PDF가 24.6MB여서, 구매요청 1건당 첨부파일 합계 한도인 20MB를 넘어 저장이 진행되지 않았습니다. 이 경우 화면에는 용량 초과 안내 대신 &#x27;시스템 오류가 발생했습니다(E-SYS-500)&#x27;라는 공통 메시지가 표시되는데, 이는 이미 알려진 화면 표시 문제여서 혼란을 드려 죄송합니다. 해당 시도에서는 구매요청이 저장되지 않았으니, 번거로우시겠지만 견적서 PDF를 압축하거나 해상도를 낮추거나 여러 파일로 나누어 첨부파일 합계를 20MB 이하로 맞춘 뒤 다시 저장해 주세요. 그래도 저장되지 않으면 이 티켓으로 다시 알려주시기 바랍니다.</div></div><p style="margin-top:6px;font-size:13px;color:var(--muted)">답변 검토: 검토 통과 · 재작성 0회</p></div>
+  </div>
+</div>
+<div class="card" id="VOC-2610-040">
+  <div class="card-head"><span class="no">VOC-2610-040</span><span class="title">팀원 화면 권한 오류 확인 요청</span>
+    <span class="badge b-type">중복 VOC</span><span class="badge p-mid">보통</span><span class="badge b-flag">병합 → VOC-2610-032</span>
+    <span class="meta">박준호 · 설비팀 · 10:11 접수 · 기한 10-27 18:00</span></div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">저희 팀 정해린 프로가 부서 현황 화면에서 오류가 난다고 합니다. 확인 부탁드립니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>요청자 카테고리 <b>오류</b> → <b>중복 VOC</b>로 재분류. 접수 우선순위 보통 유지. 팀장(APPROVER) VOC 상향 기준을 검토했으나 대표 티켓 VOC-2610-032에 병합되는 단일 사용자 권한 건이라 대표 티켓 우선순위(보통)를 따름</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4><ul><li>대상자(정해린, U1005)와 증상(부서 현황 화면 오류)이 먼저 접수된 VOC-2610-032(09:08 접수, 본인 요청)와 같음. 팀장이 10:11에 별도로 올린 건이므로 VOC-2610-032를 대표 티켓으로 두고 병합</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>선행 티켓(VOC-2610-032)과 같은 건</p><ul><li>VOC-2610-032 대표 티켓에 병합, 처리 결과는 대표 티켓으로 안내</li></ul></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">병합 처리. 별도 조치 없음.</div></div>
+    <div class="sec full"><h4>답변 초안</h4><div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 문의하신 정해린 프로님의 부서 현황 화면 오류 건은 오늘 오전 정해린 프로님이 직접 접수하신 건(VOC-2610-032)과 같은 내용이어서, 그 티켓으로 함께 처리하겠습니다. 대상자와 증상이 같아 한 티켓에서 확인하는 것이 빠르기 때문에 이 티켓은 해당 건에 합쳐 두었습니다. 처리 결과는 VOC-2610-032 티켓에서 안내드리겠습니다. 대표 티켓을 처리하는 중에 팀장님 확인이나 승인이 필요하면 별도로 연락드리겠습니다.</div></div><p style="margin-top:6px;font-size:13px;color:var(--muted)">답변 검토: 검토 통과 · 재작성 1회</p></div>
+  </div>
+</div>
+<div class="card" id="VOC-2610-036">
+  <div class="card-head"><span class="no">VOC-2610-036</span><span class="title">로그인할 때마다 비밀번호 변경 화면이 떠요</span>
+    <span class="badge b-type">단순 문의</span><span class="badge p-low">낮음</span>
+    <span class="meta">임채원 · 생산관리팀 · 09:33 접수 · 기한 10-30 18:00</span></div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">로그인하면 비밀번호를 변경하라는 화면이 매번 나옵니다. &#x27;다음에 변경&#x27;을 눌러도 다음날 또 나옵니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>요청자 카테고리 <b>로그인/계정</b> → <b>단순 문의</b>로 재분류. 접수 우선순위 낮음 유지. 로그인은 가능하고 업무 차질 언급 없음</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4><ul><li>users: U1009 status=ACTIVE, login_fail_count=0, last_login_at=2026-10-27 08:50 (로그인은 정상)</li><li>users: U1009 pw_changed_at=2026-07-21 → 접수일 2026-10-27 기준 98일 경과 (90일 기준 2026-10-19 초과)</li><li>error_logs: 조회 기간(2026-10-24 09:33 ~ 2026-10-27 09:33) 내 U1009 에러 로그 없음 (E-AUTH 계열 없음)</li><li>운영매뉴얼 3.2: 90일 경과 시 로그인할 때 변경 안내 화면이 계속 표시됨(정상 동작)</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>비밀번호를 마지막으로 바꾼 지 90일이 지나서(2026-07-21 변경, 98일 경과) 매뉴얼 3.2에 따라 로그인할 때마다 변경 안내 화면이 나오는 정상 동작입니다. &#x27;다음에 변경&#x27;은 안내를 미루기만 하므로 비밀번호를 바꾸기 전까지 계속 나타납니다.</p><ul><li>요청자에게 비밀번호 변경 주기(90일) 정책과 기간 경과로 안내 화면이 반복 표시되는 정상 동작임을 안내</li><li>안내 화면에서 비밀번호를 변경하면 이후 더 표시되지 않음을 안내 (운영담당 시스템 조치 없음)</li></ul></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">계정은 ACTIVE이고 로그인 실패 기록이 없어 잠금 해제나 초기화 같은 조치는 필요 없습니다.<br>별도 확인 사항(이번 VOC와 원인 다름): 요청자 U1009의 구매요청 PR-26100412(2026-10-23 16:10 생성)가 결재 대기 중이며, 결재자 U1006 강도윤은 status=INACTIVE입니다. 같은 결재자에게 PR-26100411(요청자 U1010)도 대기 중입니다. 생산관리팀 ACTIVE 결재자는 U1013 배수아입니다. 매뉴얼 4장의 결재선 재지정 대상이므로 이를 다루는 티켓이 따로 있는지 확인해야 합니다. 이 티켓의 조치에는 넣지 않았습니다.<br>context의 batch_logs(L-880170~L-880173, BAT-ORDER-SYNC E-BAT-102)는 PR-26100418~20 관련 건으로, 이번 VOC와 관계가 없습니다.</div></div>
+    <div class="sec full"><h4>답변 초안</h4><div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 문의하신 비밀번호 변경 화면은 시스템 오류가 아니라 정상적으로 나오는 안내이며, 비밀번호를 변경하시면 더 이상 표시되지 않습니다. 시스템은 비밀번호를 90일마다 변경하도록 되어 있는데, 마지막으로 변경하신 날(2026년 7월 21일)부터 90일이 지나 로그인할 때마다 변경 안내 화면이 나오고 있습니다. &#x27;다음에 변경&#x27;은 안내를 잠시 미루는 기능이라 비밀번호를 바꾸시기 전까지는 다시 나타납니다. 계정은 정상이고 로그인에도 문제가 없어 별도로 조치할 사항은 없습니다. 번거로우시겠지만 다음 로그인 때 안내 화면에서 비밀번호를 변경해 주세요.</div></div><p style="margin-top:6px;font-size:13px;color:var(--muted)">답변 검토: 검토 통과 · 재작성 0회</p></div>
+  </div>
+</div>
+<div class="card" id="VOC-2610-038">
+  <div class="card-head"><span class="no">VOC-2610-038</span><span class="title">구매요청 목록 엑셀 다운로드 기능 요청</span>
+    <span class="badge b-type">개선 요청</span><span class="badge p-low">낮음</span>
+    <span class="meta">조은비 · 생산기술팀 · 09:52 접수 · 기한 10-30 18:00</span></div>
+  <div class="card-body">
+    <div class="sec full"><h4>VOC 내용</h4><div class="voc">매주 팀 구매 현황을 정리하는데 화면을 하나씩 복사하고 있습니다. 목록 화면에 엑셀 다운로드 버튼을 추가해 주시면 좋겠습니다.</div></div>
+    <div class="sec"><h4>처리 유형·우선순위</h4><p>요청자 카테고리 <b>기타</b> → <b>개선 요청</b>로 재분류. 접수 우선순위 낮음 유지. 장애가 아닌 기능 추가 요청</p></div>
+    <div class="sec"><h4>확인 근거 (DB/로그)</h4><ul><li>해당 없음 (기능 추가 요청)</li></ul></div>
+    <div class="sec"><h4>원인·조치 방안</h4><p>VOC 처리 대상이 아닌 기능 개선 요청</p><ul><li>개선요청 게시판으로 이관하고 감사 인사와 이관 사실을 안내</li></ul></div>
+    <div class="sec"><h4>이관·주의사항</h4><div class="note">개선요청 게시판 이관. 전달 내용: 구매요청 목록 엑셀 다운로드 기능 요청<br>개선요청 게시판 이관.</div></div>
+    <div class="sec full"><h4>답변 초안</h4><div class="answer"><button class="copy">복사</button><div class="answer-text">안녕하세요. 좋은 의견 감사합니다. 말씀하신 구매요청 목록 화면의 엑셀 다운로드 기능은 기능 개선 요청으로 개선요청 게시판에 이관해 접수했습니다. 시스템 오류가 아니라 새 기능을 추가하는 내용이라 운영 처리 대신 개선 검토 절차로 진행됩니다. 접수된 내용은 분기 개선 검토 회의에서 논의하며, 검토 결과와 반영 여부는 회의 후 개선요청 게시판으로 안내드리겠습니다. 진행 상황은 개선요청 게시판에서 확인하실 수 있습니다.</div></div><p style="margin-top:6px;font-size:13px;color:var(--muted)">답변 검토: 검토 통과 · 재작성 0회</p></div>
+  </div>
+</div>
+<footer>답변 초안은 담당자 검토 후 등록합니다. 자동 발송되지 않습니다.</footer>
+</div><script>
+document.querySelectorAll('.copy').forEach(function(btn){btn.addEventListener('click',function(){
+var text=btn.parentElement.querySelector('.answer-text').innerText;
+try{navigator.clipboard.writeText(text).then(function(){btn.textContent='복사됨';setTimeout(function(){btn.textContent='복사';},1500);},function(){});}catch(e){}});});
+</script></body></html>

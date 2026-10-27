@@ -1,0 +1,266 @@
+{
+  "ticket": {
+    "ticket_id": "VOC-2610-032",
+    "received_at": "2026-10-27 09:08",
+    "requester": {
+      "user_id": "U1005",
+      "name": "정해린",
+      "dept": "설비팀",
+      "role": "REQUESTER",
+      "extra_permission": "",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 09:02",
+      "pw_changed_at": "2026-09-28"
+    },
+    "category": "오류",
+    "title": "부서 구매요청 현황 화면 접속 시 오류",
+    "content": "구매요청 > 부서 현황 메뉴를 누르면 '권한이 없습니다' 메시지가 나옵니다. 지난주까지는 됐던 것 같은데 시스템 오류인가요?",
+    "priority": "보통"
+  },
+  "classification": {
+    "ticket_id": "VOC-2610-032",
+    "route": "장애·문의",
+    "type": "권한 부족",
+    "category_changed": true,
+    "priority": "보통",
+    "priority_reason": "접수 우선순위 보통 유지. 기한 언급 없고 REQUESTER 1인 건",
+    "representative_ticket": null,
+    "target_user_ids": [
+      "U1005"
+    ],
+    "mentioned_req_ids": [],
+    "summary": "설비팀 정해린 부서 현황 화면 '권한이 없습니다' (DEPT_VIEW 미보유 추정) - VOC-2610-040과 병합 대상의 대표 티켓",
+    "reason": "요청자는 '오류'로 접수했으나 '권한이 없습니다' 메시지이며 요청자 정보상 role=REQUESTER, extra_permission 비어 있음. 노하우상 권한 메시지는 시스템 오류가 아닌 권한 미보유로 보므로 권한 부족으로 재분류. 팀장(VOC-2610-040)이 같은 건을 나중에 올려 이 티켓이 대표 티켓"
+  },
+  "target_users": [
+    {
+      "user_id": "U1005",
+      "name": "정해린",
+      "dept": "설비팀",
+      "role": "REQUESTER",
+      "extra_permission": "",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 09:02",
+      "pw_changed_at": "2026-09-28"
+    }
+  ],
+  "purchase_requests": [
+    {
+      "req_id": "PR-26100419",
+      "requester_id": "U1005",
+      "item_code": "ITM-30215",
+      "qty": "1",
+      "amount": "470000",
+      "status": "APPROVED",
+      "current_approver_id": "",
+      "created_at": "2026-10-23 11:02",
+      "updated_at": "2026-10-26 17:05"
+    },
+    {
+      "req_id": "PR-26100430",
+      "requester_id": "U1005",
+      "item_code": "ITM-30301",
+      "qty": "2",
+      "amount": "780000",
+      "status": "PENDING_APPROVAL",
+      "current_approver_id": "U1003",
+      "created_at": "2026-10-27 08:55",
+      "updated_at": "2026-10-27 08:55"
+    }
+  ],
+  "approvers": [
+    {
+      "user_id": "U1003",
+      "name": "박준호",
+      "dept": "설비팀",
+      "role": "APPROVER",
+      "extra_permission": "DEPT_VIEW",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 09:12",
+      "pw_changed_at": "2026-09-15"
+    }
+  ],
+  "same_approver_pending": [],
+  "dept_active_approvers": [
+    {
+      "user_id": "U1003",
+      "name": "박준호",
+      "dept": "설비팀",
+      "role": "APPROVER",
+      "extra_permission": "DEPT_VIEW",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 09:12",
+      "pw_changed_at": "2026-09-15"
+    }
+  ],
+  "error_logs": [
+    {
+      "log_id": "L-880172",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100419",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    },
+    {
+      "log_id": "L-880190",
+      "occurred_at": "2026-10-27 09:03",
+      "user_id": "U1005",
+      "req_id": "",
+      "screen_or_batch": "PR_DEPT_STATUS",
+      "error_code": "E-AUTH-403",
+      "message": "permission denied: DEPT_VIEW required"
+    },
+    {
+      "log_id": "L-880191",
+      "occurred_at": "2026-10-27 09:06",
+      "user_id": "U1005",
+      "req_id": "",
+      "screen_or_batch": "PR_DEPT_STATUS",
+      "error_code": "E-AUTH-403",
+      "message": "permission denied: DEPT_VIEW required"
+    }
+  ],
+  "batch_logs": [
+    {
+      "log_id": "L-880170",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "ERP interface timeout (30s) - 0/3 records synced"
+    },
+    {
+      "log_id": "L-880171",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100418",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    },
+    {
+      "log_id": "L-880172",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100419",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    },
+    {
+      "log_id": "L-880173",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100420",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    }
+  ],
+  "code_master": [
+    {
+      "code_type": "ITEM",
+      "code": "ITM-30215",
+      "code_name": "근접 센서 모듈",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2026-02-14"
+    },
+    {
+      "code_type": "ITEM",
+      "code": "ITM-30301",
+      "code_name": "서보 모터 드라이버",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2026-05-08"
+    },
+    {
+      "code_type": "ITEM",
+      "code": "ITM-30322",
+      "code_name": "토크 센서 TS-200",
+      "use_yn": "N",
+      "remark": "신규 등록 요청(구매팀 검토 중)",
+      "updated_at": "2026-10-24"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "DRAFT",
+      "code_name": "임시저장",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "PENDING_APPROVAL",
+      "code_name": "결재 대기",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "APPROVED",
+      "code_name": "결재 완료(발주 대기)",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "ORDERED",
+      "code_name": "발주 완료",
+      "use_yn": "Y",
+      "remark": "BAT-ORDER-SYNC가 ERP 발주 결과로 갱신",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "CANCELED",
+      "code_name": "취소",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "ACTIVE",
+      "code_name": "사용",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "LOCKED",
+      "code_name": "잠금",
+      "use_yn": "Y",
+      "remark": "로그인 5회 실패 시 자동 잠금",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "INACTIVE",
+      "code_name": "미사용",
+      "use_yn": "Y",
+      "remark": "퇴사·부서이동 시 인사 연동으로 변경",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PERMISSION",
+      "code": "DEPT_VIEW",
+      "code_name": "부서 구매요청 현황 조회",
+      "use_yn": "Y",
+      "remark": "팀장 승인 후 부여",
+      "updated_at": "2024-01-01"
+    }
+  ],
+  "query_window": "2026-10-24 09:08 ~ 2026-10-27 09:08"
+}

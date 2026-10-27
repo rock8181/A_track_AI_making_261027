@@ -1,0 +1,278 @@
+{
+  "ticket": {
+    "ticket_id": "VOC-2610-035",
+    "received_at": "2026-10-27 09:30",
+    "requester": {
+      "user_id": "U1001",
+      "name": "김민수",
+      "dept": "생산기술팀",
+      "role": "REQUESTER",
+      "extra_permission": "",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 08:41",
+      "pw_changed_at": "2026-09-02"
+    },
+    "category": "오류",
+    "title": "구매요청 저장할 때 시스템 오류",
+    "content": "어제 오후에 구매요청 저장 버튼을 누르면 '시스템 오류가 발생했습니다(E-SYS-500)'가 뜨면서 저장이 안 됩니다. 견적서 PDF를 첨부한 상태였습니다.",
+    "priority": "보통"
+  },
+  "classification": {
+    "ticket_id": "VOC-2610-035",
+    "route": "장애·문의",
+    "type": "첨부파일 용량",
+    "category_changed": true,
+    "priority": "보통",
+    "priority_reason": "접수 우선순위 보통 유지. 기한 언급 없고 요청자 1인 건",
+    "representative_ticket": null,
+    "target_user_ids": [
+      "U1001"
+    ],
+    "mentioned_req_ids": [],
+    "summary": "생산기술팀 김민수 견적서 PDF 첨부 후 구매요청 저장 시 E-SYS-500",
+    "reason": "요청자는 '오류'로 접수했으나 저장 오류 + 첨부파일 언급 + 화면 공통 메시지 E-SYS-500으로, 노하우·매뉴얼 6장상 첨부파일 용량 초과(E-FILE-413) 가능성이 높아 첨부파일 용량 유형으로 재분류. 실제 코드는 error_log에서 확인 필요(원인 미확정)"
+  },
+  "target_users": [
+    {
+      "user_id": "U1001",
+      "name": "김민수",
+      "dept": "생산기술팀",
+      "role": "REQUESTER",
+      "extra_permission": "",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 08:41",
+      "pw_changed_at": "2026-09-02"
+    }
+  ],
+  "purchase_requests": [
+    {
+      "req_id": "PR-26100418",
+      "requester_id": "U1001",
+      "item_code": "ITM-20431",
+      "qty": "2",
+      "amount": "3200000",
+      "status": "APPROVED",
+      "current_approver_id": "",
+      "created_at": "2026-10-23 09:15",
+      "updated_at": "2026-10-26 16:40"
+    },
+    {
+      "req_id": "PR-26100425",
+      "requester_id": "U1001",
+      "item_code": "ITM-20431",
+      "qty": "1",
+      "amount": "1600000",
+      "status": "PENDING_APPROVAL",
+      "current_approver_id": "U1012",
+      "created_at": "2026-10-26 15:21:07",
+      "updated_at": "2026-10-26 15:21:07"
+    },
+    {
+      "req_id": "PR-26100426",
+      "requester_id": "U1001",
+      "item_code": "ITM-20431",
+      "qty": "1",
+      "amount": "1600000",
+      "status": "PENDING_APPROVAL",
+      "current_approver_id": "U1012",
+      "created_at": "2026-10-26 15:21:08",
+      "updated_at": "2026-10-26 15:21:08"
+    }
+  ],
+  "approvers": [
+    {
+      "user_id": "U1012",
+      "name": "한승우",
+      "dept": "생산기술팀",
+      "role": "APPROVER",
+      "extra_permission": "DEPT_VIEW",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 07:58",
+      "pw_changed_at": "2026-08-29"
+    }
+  ],
+  "same_approver_pending": [],
+  "dept_active_approvers": [
+    {
+      "user_id": "U1012",
+      "name": "한승우",
+      "dept": "생산기술팀",
+      "role": "APPROVER",
+      "extra_permission": "DEPT_VIEW",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 07:58",
+      "pw_changed_at": "2026-08-29"
+    }
+  ],
+  "error_logs": [
+    {
+      "log_id": "L-880150",
+      "occurred_at": "2026-10-26 15:21",
+      "user_id": "U1001",
+      "req_id": "PR-26100425",
+      "screen_or_batch": "PR_CREATE",
+      "error_code": "W-PR-DUP",
+      "message": "duplicate submit detected (interval=1s) - not blocked"
+    },
+    {
+      "log_id": "L-880161",
+      "occurred_at": "2026-10-26 16:12",
+      "user_id": "U1001",
+      "req_id": "",
+      "screen_or_batch": "PR_CREATE",
+      "error_code": "E-FILE-413",
+      "message": "attachment size exceeded (24.6MB > 20MB)"
+    },
+    {
+      "log_id": "L-880162",
+      "occurred_at": "2026-10-26 16:14",
+      "user_id": "U1001",
+      "req_id": "",
+      "screen_or_batch": "PR_CREATE",
+      "error_code": "E-FILE-413",
+      "message": "attachment size exceeded (24.6MB > 20MB)"
+    },
+    {
+      "log_id": "L-880171",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100418",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    }
+  ],
+  "batch_logs": [
+    {
+      "log_id": "L-880170",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "ERP interface timeout (30s) - 0/3 records synced"
+    },
+    {
+      "log_id": "L-880171",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100418",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    },
+    {
+      "log_id": "L-880172",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100419",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    },
+    {
+      "log_id": "L-880173",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100420",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    }
+  ],
+  "code_master": [
+    {
+      "code_type": "ITEM",
+      "code": "ITM-20431",
+      "code_name": "정밀 디지털 캘리퍼",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2025-09-18"
+    },
+    {
+      "code_type": "ITEM",
+      "code": "ITM-30322",
+      "code_name": "토크 센서 TS-200",
+      "use_yn": "N",
+      "remark": "신규 등록 요청(구매팀 검토 중)",
+      "updated_at": "2026-10-24"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "DRAFT",
+      "code_name": "임시저장",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "PENDING_APPROVAL",
+      "code_name": "결재 대기",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "APPROVED",
+      "code_name": "결재 완료(발주 대기)",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "ORDERED",
+      "code_name": "발주 완료",
+      "use_yn": "Y",
+      "remark": "BAT-ORDER-SYNC가 ERP 발주 결과로 갱신",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "CANCELED",
+      "code_name": "취소",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "ACTIVE",
+      "code_name": "사용",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "LOCKED",
+      "code_name": "잠금",
+      "use_yn": "Y",
+      "remark": "로그인 5회 실패 시 자동 잠금",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "INACTIVE",
+      "code_name": "미사용",
+      "use_yn": "Y",
+      "remark": "퇴사·부서이동 시 인사 연동으로 변경",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PERMISSION",
+      "code": "DEPT_VIEW",
+      "code_name": "부서 구매요청 현황 조회",
+      "use_yn": "Y",
+      "remark": "팀장 승인 후 부여",
+      "updated_at": "2024-01-01"
+    }
+  ],
+  "query_window": "2026-10-24 09:30 ~ 2026-10-27 09:30"
+}

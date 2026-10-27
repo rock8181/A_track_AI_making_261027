@@ -1,0 +1,29 @@
+{
+  "ticket_id": "VOC-2610-032",
+  "evidence": [
+    "users: U1005(정해린, 설비팀) role=REQUESTER, extra_permission 비어 있음, status=ACTIVE, login_fail_count=0",
+    "error_log L-880190 10-27 09:03 U1005 PR_DEPT_STATUS E-AUTH-403 'permission denied: DEPT_VIEW required'",
+    "error_log L-880191 10-27 09:06 U1005 PR_DEPT_STATUS E-AUTH-403 'permission denied: DEPT_VIEW required'",
+    "code_master PERMISSION DEPT_VIEW(부서 구매요청 현황 조회) remark='팀장 승인 후 부여'",
+    "dept_active_approvers: U1003(박준호, 설비팀) role=APPROVER, status=ACTIVE (승인 주체가 될 현 팀장)",
+    "지난주까지 됐다는 진술에 대한 권한 변경 이력: 확인 불가 (조회 기간 2026-10-24 09:08 ~ 2026-10-27 09:08 안에 관련 로그 없음)"
+  ],
+  "cause": "요청자 U1005가 REQUESTER 역할로 부서 구매요청 현황 조회 권한(DEPT_VIEW)을 갖고 있지 않아 접근이 막힌 것입니다(E-AUTH-403). 시스템 오류가 아니라 권한 정책에 따른 정상 동작입니다.",
+  "actions": [
+    "요청자에게 '권한이 없습니다' 메시지는 DEPT_VIEW 권한 미보유 때문이며 시스템 오류가 아님을 안내",
+    "권한 신청 절차 안내: 설비팀 팀장(U1003 박준호) 승인 메일을 첨부해 권한 신청서 제출",
+    "팀장 승인 메일이 첨부된 신청서를 받으면 운영담당이 U1005에 DEPT_VIEW 권한 부여(사람이 수행)",
+    "병합 대상 VOC-2610-040(팀장 접수 건)에도 대표 티켓 VOC-2610-032 기준으로 같은 처리 결과 공유"
+  ],
+  "action_owner": "안내",
+  "action_summary": "U1005 DEPT_VIEW 권한 미보유(E-AUTH-403) - 권한 신청 절차 안내, 팀장 승인 메일 접수 후 권한 부여",
+  "precondition": "팀장(U1003 박준호) 승인 메일이 첨부된 권한 신청서 접수",
+  "transfer_to": "",
+  "transfer_content": "",
+  "notes": [
+    "팀장 승인 없이 DEPT_VIEW를 임의로 부여하지 않음(매뉴얼 2장). 팀장이 VOC-2610-040을 올린 것만으로는 승인 메일로 보지 않음",
+    "'지난주까지 됐다'는 진술을 뒷받침할 권한 보유·회수 이력은 context에 없음. 확인이 필요하면 권한 변경 이력을 별도로 조회해야 함",
+    "별건: 요청자의 PR-26100419(APPROVED)가 10-27 02:00 BAT-ORDER-SYNC 실패(L-880172, E-BAT-102) 영향 건임(같은 실패 건 PR-26100418, PR-26100420, L-880170 0/3 synced). 이 VOC 증상과는 무관하며 배치 실패는 개발팀 이관 대상이므로 해당 배치 VOC에서 처리",
+    "답변에는 테이블·컬럼명(extra_permission 등)을 쓰지 않음"
+  ]
+}

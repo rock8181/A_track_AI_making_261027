@@ -1,0 +1,31 @@
+{
+  "ticket_id": "VOC-2610-037",
+  "evidence": [
+    "batch_log L-880170 10-27 02:00 BAT-ORDER-SYNC E-BAT-102 'ERP interface timeout (30s) - 0/3 records synced'",
+    "batch_log L-880171 10-27 02:00 BAT-ORDER-SYNC E-BAT-102 req_id=PR-26100418 'sync failed: status remains APPROVED'",
+    "batch_log L-880172 10-27 02:00 BAT-ORDER-SYNC E-BAT-102 req_id=PR-26100419 'sync failed: status remains APPROVED'",
+    "batch_log L-880173 10-27 02:00 BAT-ORDER-SYNC E-BAT-102 req_id=PR-26100420 'sync failed: status remains APPROVED'",
+    "code_master PR_STATUS ORDERED remark='BAT-ORDER-SYNC가 ERP 발주 결과로 갱신', APPROVED='결재 완료(발주 대기)'",
+    "purchase_requests: U1002 본인 요청 PR-26100427 status=ORDERED, updated_at=2026-10-24 02:00 (이번 실패와 무관, 이미 발주 완료)",
+    "error_logs: 조회 기간(10-24 09:40 ~ 10-27 09:40) 내 화면 에러 없음",
+    "users: U1002 이서연 구매팀 PURCHASER, status=ACTIVE (계정 문제 아님)"
+  ],
+  "cause": "10-27 02:00 BAT-ORDER-SYNC 배치가 ERP 인터페이스 타임아웃(30s, E-BAT-102)으로 실패해 대상 3건(PR-26100418/419/420)이 APPROVED(결재 완료)에 머물러 있습니다. ERP 측 타임아웃의 근본 원인(ERP 점검·지연 등)은 context에서 확인 불가합니다.",
+  "actions": [
+    "개발팀에 BAT-ORDER-SYNC 실패(E-BAT-102, 10-27 02:00, ERP interface timeout) 장애 티켓 생성·이관",
+    "영향 구매요청 3건(PR-26100418, PR-26100419, PR-26100420) 목록과 batch_log L-880170~L-880173을 함께 전달",
+    "ERP 실제 발주 반영 여부 확인 및 배치 재실행은 개발팀이 수행(운영담당은 재실행하지 않음)",
+    "개발팀 재처리 후 3건이 ORDERED로 갱신되었는지 확인하고 요청자(U1002)에게 결과 안내"
+  ],
+  "action_owner": "이관",
+  "action_summary": "BAT-ORDER-SYNC 10-27 02:00 ERP 타임아웃(E-BAT-102) 실패 - 영향 3건(PR-26100418/419/420) 개발팀 장애 티켓 이관",
+  "precondition": "",
+  "transfer_to": "개발팀",
+  "transfer_content": "BAT-ORDER-SYNC 2026-10-27 02:00 실패, E-BAT-102 'ERP interface timeout (30s) - 0/3 records synced'. 영향 구매요청: PR-26100418, PR-26100419, PR-26100420 (모두 APPROVED 유지). 관련 로그: L-880170, L-880171, L-880172, L-880173. 요청 사항: ERP 발주 반영 여부 확인, 타임아웃 원인 확인 및 배치 재처리. 접수 VOC: VOC-2610-037(구매팀 이서연, 우선순위 높음, SLA 2시간).",
+  "notes": [
+    "배치 재실행·ERP 원인 파악은 운영담당 권한 밖(매뉴얼 7장)이므로 직접 조치로 처리하지 않음",
+    "요청자는 '어제 결재 완료된 건들'이라고 했으나 영향 3건의 요청자·결재일은 context에 없어 VOC 언급 건과 같은지 확인 불가. 요청자 본인 명의 건 PR-26100427은 이미 10-24 ORDERED 상태",
+    "요청자가 질문한 'ERP에 발주가 들어갔는지'는 로그상 0/3 synced로 시스템 갱신 실패만 확인되며, ERP 측 실제 발주 여부는 개발팀 확인 필요(단정 금지)",
+    "배치 오류는 영향 범위가 커 최우선 처리 대상, 우선순위 높음 SLA 2시간(접수 09:40)"
+  ]
+}

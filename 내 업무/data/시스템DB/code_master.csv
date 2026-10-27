@@ -1,0 +1,18 @@
+﻿code_type,code,code_name,use_yn,remark,updated_at
+ITEM,ITM-10005,A4 복사용지(박스),Y,,2025-03-02
+ITEM,ITM-20117,산업용 장갑(10켤레),Y,,2025-06-11
+ITEM,ITM-20431,정밀 디지털 캘리퍼,Y,,2025-09-18
+ITEM,ITM-30108,케이블 타이(1000ea),Y,,2025-01-20
+ITEM,ITM-30215,근접 센서 모듈,Y,,2026-02-14
+ITEM,ITM-30301,서보 모터 드라이버,Y,,2026-05-08
+ITEM,ITM-30322,토크 센서 TS-200,N,신규 등록 요청(구매팀 검토 중),2026-10-24
+ITEM,ITM-40022,검사용 표준 시편,Y,,2024-11-30
+PR_STATUS,DRAFT,임시저장,Y,,2024-01-01
+PR_STATUS,PENDING_APPROVAL,결재 대기,Y,,2024-01-01
+PR_STATUS,APPROVED,결재 완료(발주 대기),Y,,2024-01-01
+PR_STATUS,ORDERED,발주 완료,Y,BAT-ORDER-SYNC가 ERP 발주 결과로 갱신,2024-01-01
+PR_STATUS,CANCELED,취소,Y,,2024-01-01
+USER_STATUS,ACTIVE,사용,Y,,2024-01-01
+USER_STATUS,LOCKED,잠금,Y,로그인 5회 실패 시 자동 잠금,2024-01-01
+USER_STATUS,INACTIVE,미사용,Y,퇴사·부서이동 시 인사 연동으로 변경,2024-01-01
+PERMISSION,DEPT_VIEW,부서 구매요청 현황 조회,Y,팀장 승인 후 부여,2024-01-01

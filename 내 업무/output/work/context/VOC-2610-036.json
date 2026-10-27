@@ -1,0 +1,242 @@
+{
+  "ticket": {
+    "ticket_id": "VOC-2610-036",
+    "received_at": "2026-10-27 09:33",
+    "requester": {
+      "user_id": "U1009",
+      "name": "임채원",
+      "dept": "생산관리팀",
+      "role": "REQUESTER",
+      "extra_permission": "",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 08:50",
+      "pw_changed_at": "2026-07-21"
+    },
+    "category": "로그인/계정",
+    "title": "로그인할 때마다 비밀번호 변경 화면이 떠요",
+    "content": "로그인하면 비밀번호를 변경하라는 화면이 매번 나옵니다. '다음에 변경'을 눌러도 다음날 또 나옵니다.",
+    "priority": "낮음"
+  },
+  "classification": {
+    "ticket_id": "VOC-2610-036",
+    "route": "장애·문의",
+    "type": "단순 문의",
+    "category_changed": true,
+    "priority": "낮음",
+    "priority_reason": "접수 우선순위 낮음 유지. 로그인은 가능하고 업무 차질 언급 없음",
+    "representative_ticket": null,
+    "target_user_ids": [
+      "U1009"
+    ],
+    "mentioned_req_ids": [],
+    "summary": "생산관리팀 임채원 로그인 시 비밀번호 변경 화면 반복 표시(비밀번호 변경일 2026-07-21)",
+    "reason": "계정 상태 ACTIVE로 로그인은 되며, 비밀번호 변경 안내가 반복된다는 내용. 요청자 정보상 pw_changed_at=2026-07-21로 90일이 지난 것으로 보여 매뉴얼 3.2의 정상 동작에 대한 문의(이력의 단순 문의 유형)로 재분류"
+  },
+  "target_users": [
+    {
+      "user_id": "U1009",
+      "name": "임채원",
+      "dept": "생산관리팀",
+      "role": "REQUESTER",
+      "extra_permission": "",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 08:50",
+      "pw_changed_at": "2026-07-21"
+    }
+  ],
+  "purchase_requests": [
+    {
+      "req_id": "PR-26100412",
+      "requester_id": "U1009",
+      "item_code": "ITM-30108",
+      "qty": "10",
+      "amount": "450000",
+      "status": "PENDING_APPROVAL",
+      "current_approver_id": "U1006",
+      "created_at": "2026-10-23 16:10",
+      "updated_at": "2026-10-23 16:10"
+    }
+  ],
+  "approvers": [
+    {
+      "user_id": "U1006",
+      "name": "강도윤",
+      "dept": "생산관리팀",
+      "role": "APPROVER",
+      "extra_permission": "DEPT_VIEW",
+      "status": "INACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-17 18:20",
+      "pw_changed_at": "2026-07-30"
+    }
+  ],
+  "same_approver_pending": [
+    {
+      "req_id": "PR-26100411",
+      "requester_id": "U1010",
+      "item_code": "ITM-30215",
+      "qty": "4",
+      "amount": "1880000",
+      "status": "PENDING_APPROVAL",
+      "current_approver_id": "U1006",
+      "created_at": "2026-10-23 14:02",
+      "updated_at": "2026-10-23 14:02"
+    },
+    {
+      "req_id": "PR-26100412",
+      "requester_id": "U1009",
+      "item_code": "ITM-30108",
+      "qty": "10",
+      "amount": "450000",
+      "status": "PENDING_APPROVAL",
+      "current_approver_id": "U1006",
+      "created_at": "2026-10-23 16:10",
+      "updated_at": "2026-10-23 16:10"
+    }
+  ],
+  "dept_active_approvers": [
+    {
+      "user_id": "U1013",
+      "name": "배수아",
+      "dept": "생산관리팀",
+      "role": "APPROVER",
+      "extra_permission": "DEPT_VIEW",
+      "status": "ACTIVE",
+      "login_fail_count": "0",
+      "last_login_at": "2026-10-27 08:10",
+      "pw_changed_at": "2026-10-20"
+    }
+  ],
+  "error_logs": [],
+  "batch_logs": [
+    {
+      "log_id": "L-880170",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "ERP interface timeout (30s) - 0/3 records synced"
+    },
+    {
+      "log_id": "L-880171",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100418",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    },
+    {
+      "log_id": "L-880172",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100419",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    },
+    {
+      "log_id": "L-880173",
+      "occurred_at": "2026-10-27 02:00",
+      "user_id": "SYSTEM",
+      "req_id": "PR-26100420",
+      "screen_or_batch": "BAT-ORDER-SYNC",
+      "error_code": "E-BAT-102",
+      "message": "sync failed: status remains APPROVED"
+    }
+  ],
+  "code_master": [
+    {
+      "code_type": "ITEM",
+      "code": "ITM-30108",
+      "code_name": "케이블 타이(1000ea)",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2025-01-20"
+    },
+    {
+      "code_type": "ITEM",
+      "code": "ITM-30322",
+      "code_name": "토크 센서 TS-200",
+      "use_yn": "N",
+      "remark": "신규 등록 요청(구매팀 검토 중)",
+      "updated_at": "2026-10-24"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "DRAFT",
+      "code_name": "임시저장",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "PENDING_APPROVAL",
+      "code_name": "결재 대기",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "APPROVED",
+      "code_name": "결재 완료(발주 대기)",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "ORDERED",
+      "code_name": "발주 완료",
+      "use_yn": "Y",
+      "remark": "BAT-ORDER-SYNC가 ERP 발주 결과로 갱신",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PR_STATUS",
+      "code": "CANCELED",
+      "code_name": "취소",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "ACTIVE",
+      "code_name": "사용",
+      "use_yn": "Y",
+      "remark": "",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "LOCKED",
+      "code_name": "잠금",
+      "use_yn": "Y",
+      "remark": "로그인 5회 실패 시 자동 잠금",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "USER_STATUS",
+      "code": "INACTIVE",
+      "code_name": "미사용",
+      "use_yn": "Y",
+      "remark": "퇴사·부서이동 시 인사 연동으로 변경",
+      "updated_at": "2024-01-01"
+    },
+    {
+      "code_type": "PERMISSION",
+      "code": "DEPT_VIEW",
+      "code_name": "부서 구매요청 현황 조회",
+      "use_yn": "Y",
+      "remark": "팀장 승인 후 부여",
+      "updated_at": "2024-01-01"
+    }
+  ],
+  "query_window": "2026-10-24 09:33 ~ 2026-10-27 09:33"
+}

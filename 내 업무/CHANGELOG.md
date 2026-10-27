@@ -16,7 +16,7 @@
 ### 현재 상태
 - 완료: 페이지 작성, 샘플 포함(약 60KB), `embed_example.py` 2회 연속 실행으로 재실행 안전성 확인
 - 검증: 브라우저로 열기만 했고 화면 렌더링(iframe 높이 자동 조정, 다크 모드)은 **미검증**
-- git: 이 폴더(`내 업무/`)의 나머지 파일(`업무설계서.md`, `workflow.md`, `.claude/`, `data/`, `scripts/voc_tools.py` 등)은 아직 미추적 상태이며, 이번 커밋에는 위 2개 파일과 이 CHANGELOG만 포함
+- git: 이 폴더(`내 업무/`)의 나머지 파일(`업무설계서.md`, `workflow.md`, `.claude/`, `data/`, `scripts/voc_tools.py` 등)은 아직 미추적 상태이며, 이번 커밋에는 위 2개 파일과 이 CHANGELOG만 포함 → 커밋 `c180b08`, `origin/main` 푸시 완료
 
 ### 다음 할 일
 1. 브라우저에서 `my-agent-team.html`을 열어 5번 샘플의 iframe 높이와 모바일 폭(약 375px) 레이아웃 확인
