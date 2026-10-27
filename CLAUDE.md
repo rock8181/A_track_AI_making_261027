@@ -15,6 +15,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `Ch5_완성본/` | 동작하는 로컬 RAG 검색 시스템 (아래 참고) |
 | `내 업무/guide/` | 업무를 Agent로 설계하는 단계별 가이드 (`업무설계_가이드.md`, `router.md`, `parallel.md`, `gen-eval.md`) |
 
+## 작업 규칙
+
+- 커밋·푸시는 직접 하지 않고 Haiku 서브에이전트(`model: "haiku"`)에 맡깁니다. 서브에이전트에는 변경 파일 목록과 커밋 메시지 방향을 넘기고, `.env`·API 키 등 비밀값이 스테이징되지 않았는지 확인시킨 뒤 결과(커밋 해시, 푸시 여부)를 보고받습니다.
+
 ## Ch5_완성본 (RAG) 명령어
 
 Node 22.5+ 필요 (`node:sqlite`, `process.loadEnvFile` 사용). 외부 npm 의존성이 없어 `npm install`은 필요 없습니다. 실행은 `Ch5_완성본/`에서 합니다.
