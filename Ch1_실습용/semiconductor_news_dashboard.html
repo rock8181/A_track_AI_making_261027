@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>반도체 뉴스 모니터링</title>
+<style>
+:root{
+  --cyan:#19e3ff;--yellow:#ffd426;--text:#d6f3ff;--muted:#7fa3bd;
+  --bg0:#020a1c;--bg1:#06173a;--bg2:#0a2552;
+  --panel:rgba(6,26,60,.62);--line:rgba(25,227,255,.32);--line-soft:rgba(25,227,255,.14);
+  --glow:0 0 10px rgba(25,227,255,.35);
+}
+*{box-sizing:border-box}
+html{background:var(--bg0)}
+body{margin:0;min-height:100vh;color:var(--text);
+  font:13px/1.5 "Segoe UI","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 38%,rgba(25,140,255,.22),transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 110%,rgba(25,227,255,.10),transparent 70%),
+    linear-gradient(180deg,var(--bg1) 0%,var(--bg0) 55%,#010614 100%);
+  background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    linear-gradient(rgba(25,227,255,.035) 1px,transparent 1px) 0 0/40px 40px,
+    linear-gradient(90deg,rgba(25,227,255,.035) 1px,transparent 1px) 0 0/40px 40px}
+.screen{position:relative;z-index:1;max-width:1680px;margin:0 auto;padding:0 16px 28px}
+
+/* ---------- 헤더 ---------- */
+.top{position:relative;display:grid;grid-template-columns:1fr minmax(360px,620px) 1fr;align-items:start;gap:12px;margin-bottom:14px}
+.top::before{content:"";position:absolute;left:0;right:0;top:58px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan) 18%,transparent 34%,transparent 66%,var(--cyan) 82%,transparent);opacity:.7}
+.side{padding-top:22px;font-size:12px;color:var(--muted);letter-spacing:.3px}
+.side.r{text-align:right}
+.side b{color:var(--cyan);font-weight:600;text-shadow:var(--glow)}
+.hcenter{position:relative;text-align:center;padding:14px 60px 18px;
+  background:linear-gradient(180deg,rgba(25,227,255,.20),rgba(10,40,90,.75) 60%,rgba(4,18,44,.9));
+  clip-path:polygon(0 0,100% 0,90% 100%,10% 100%)}
+.hframe{position:absolute;inset:0;pointer-events:none}
+.hframe svg{width:100%;height:100%;display:block}
+.hcenter .sub{font-size:11px;letter-spacing:4px;color:var(--cyan);opacity:.85}
+.hcenter h1{margin:2px 0 0;font-size:26px;font-weight:700;letter-spacing:3px;color:#eafcff;
+  text-shadow:0 0 12px rgba(25,227,255,.75),0 0 28px rgba(25,227,255,.35)}
+
+/* ---------- 토글 ---------- */
+.scopes{display:flex;justify-content:center;gap:10px;margin:-2px 0 16px;flex-wrap:wrap}
+.scope{position:relative;font:inherit;font-size:13px;color:var(--muted);cursor:pointer;
+  padding:7px 22px;background:rgba(6,30,70,.7);border:1px solid var(--line);
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);transition:.15s}
+.scope b{margin-left:6px;color:var(--text);font-weight:700}
+.scope:hover{color:var(--text);border-color:var(--cyan)}
+.scope.on{color:#021022;background:linear-gradient(180deg,#5cefff,var(--cyan));border-color:var(--cyan);font-weight:700}
+.scope.on b{color:#021022}
+.scope[data-s="samsung"].on{background:linear-gradient(180deg,#ffe57a,var(--yellow));border-color:var(--yellow)}
+.scope:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+
+/* ---------- 레이아웃 ---------- */
+.grid{display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,2fr) minmax(260px,1fr);gap:14px;align-items:start}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+@media (max-width:900px){
+  .grid{grid-template-columns:1fr}
+  .top{grid-template-columns:1fr}
+  .top::before,.side{display:none}
+  .hcenter{padding:12px 34px 16px}
+  .hcenter h1{font-size:19px;letter-spacing:1px}
+}
+
+/* ---------- 패널 ---------- */
+.panel{position:relative;background:linear-gradient(180deg,rgba(10,40,88,.55),var(--panel));
+  border:1px solid var(--line);box-shadow:inset 0 0 24px rgba(25,227,255,.07),0 0 14px rgba(0,0,0,.35);
+  padding:0 14px 14px;min-width:0}
+.panel::before{content:"";position:absolute;inset:-1px;pointer-events:none;
+  --c:var(--cyan);--l:14px;--w:2px;
+  background:
+    linear-gradient(var(--c),var(--c)) left top/var(--l) var(--w) no-repeat,
+    linear-gradient(var(--c),var(--c)) left top/var(--w) var(--l) no-repeat,
+    linear-gradient(var(--c),var(--c)) right top/var(--l) var(--w) no-repeat,
+    linear-gradient(var(--c),var(--c)) right top/var(--w) var(--l) no-repeat,
+    linear-gradient(var(--c),var(--c)) left bottom/var(--l) var(--w) no-repeat,
+    linear-gradient(var(--c),var(--c)) left bottom/var(--w) var(--l) no-repeat,
+    linear-gradient(var(--c),var(--c)) right bottom/var(--l) var(--w) no-repeat,
+    linear-gradient(var(--c),var(--c)) right bottom/var(--w) var(--l) no-repeat;
+  filter:drop-shadow(0 0 4px rgba(25,227,255,.8))}
+.ptitle{position:relative;margin:0 -14px 12px;padding:8px 14px 7px 26px;font-size:13px;font-weight:600;
+  color:#eafcff;letter-spacing:.5px;
+  background:linear-gradient(90deg,rgba(25,227,255,.24),rgba(25,227,255,.04) 70%,transparent);
+  border-bottom:1px solid var(--line-soft)}
+.ptitle::before{content:"";position:absolute;left:12px;top:50%;width:6px;height:6px;margin-top:-3px;
+  background:var(--cyan);transform:rotate(45deg);box-shadow:0 0 8px var(--cyan)}
+.ptitle::after{content:"";position:absolute;right:12px;top:50%;width:34px;height:3px;margin-top:-1px;
+  background:repeating-linear-gradient(90deg,var(--cyan) 0 6px,transparent 6px 9px);opacity:.6}
+.ptitle small{font-weight:400;color:var(--muted);margin-left:6px;font-size:11px}
+.pbody{min-width:0;font-size:12px}
+.pfail,.pempty{padding:18px 6px;text-align:center;color:var(--muted);font-size:12px}
+.pfail{color:#ff8da1}
+
+/* ---------- 도넛/링 헬퍼 ---------- */
+.dn{position:relative;flex:none;margin:0 auto}
+.dn svg{display:block;width:100%;height:100%;overflow:visible}
+.dn .dc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;font-size:13px;font-weight:700;color:#eafcff;line-height:1.2;pointer-events:none}
+.dn .glow{filter:drop-shadow(0 0 4px currentColor) drop-shadow(0 0 8px currentColor)}
+
+/* ---------- 기사 목록 ---------- */
+.tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px}
+.chip{font:inherit;font-size:12px;color:var(--muted);cursor:pointer;padding:4px 11px;
+  background:rgba(4,20,48,.7);border:1px solid var(--line-soft);border-radius:2px;transition:.15s}
+.chip i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.chip b{margin-left:4px;color:var(--text);font-weight:600}
+.chip:hover{border-color:var(--line);color:var(--text)}
+.chip.on{color:var(--text);border-color:var(--cyan);background:rgba(25,227,255,.14);box-shadow:var(--glow)}
+.chip:disabled{opacity:.4;cursor:default}
+.search{flex:1;min-width:160px;font:inherit;font-size:12px;color:var(--text);padding:6px 10px;
+  background:rgba(2,12,32,.8);border:1px solid var(--line);border-radius:2px;outline:none}
+.search::placeholder{color:var(--muted)}
+.search:focus{border-color:var(--cyan);box-shadow:var(--glow)}
+.news{display:grid;gap:8px;max-height:640px;overflow:auto;padding-right:4px}
+.news::-webkit-scrollbar{width:6px}.news::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.item{position:relative;padding:10px 12px 10px 14px;background:rgba(4,22,52,.7);border:1px solid var(--line-soft);
+  border-left:3px solid var(--cyan)}
+.item:hover{border-color:var(--line);background:rgba(8,34,76,.75)}
+.item h3{margin:0 0 4px;font-size:13.5px;font-weight:600;line-height:1.4}
+.item h3 a{color:#eafcff;text-decoration:none}
+.item h3 a:hover{color:var(--cyan);text-shadow:var(--glow)}
+.meta{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;font-size:11px;color:var(--muted);margin-bottom:5px}
+.bdg{font-size:10.5px;font-weight:700;padding:1px 7px;border:1px solid;border-radius:2px;letter-spacing:.3px}
+.bdg.samsung{color:var(--yellow);border-color:rgba(255,212,38,.6);background:rgba(255,212,38,.10);box-shadow:0 0 6px rgba(255,212,38,.25)}
+.bdg.global{color:var(--cyan);border-color:rgba(25,227,255,.6);background:rgba(25,227,255,.10);box-shadow:0 0 6px rgba(25,227,255,.25)}
+.snt{font-weight:600}
+.item p{margin:0;font-size:12.5px;color:#b9d6e8}
+.cos{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px}
+.cos span{font-size:10.5px;padding:1px 7px;color:var(--muted);border:1px solid var(--line-soft);border-radius:2px}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+
+/* ---------- 수집 한계 ---------- */
+.note{margin-top:14px;padding:12px 16px;font-size:12px;color:var(--muted);
+  border:1px dashed rgba(255,212,38,.45);background:rgba(40,32,0,.18)}
+.note b{color:var(--yellow)}
+.note ul{margin:6px 0 0;padding-left:18px}
+.note li{margin:2px 0}
+.foot{margin-top:10px;text-align:center;font-size:11px;color:rgba(127,163,189,.6)}
+</style>
+</head>
+<body>
+<div class="screen">
+  <header class="top">
+    <div class="side">수집 기간 <b>2026-10-20 ~ 10-27</b></div>
+    <div class="hcenter">
+      <div class="hframe" aria-hidden="true">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+          <polyline points="0,0 10,100 90,100 100,0" fill="none" stroke="#19e3ff" stroke-width="1.2" vector-effect="non-scaling-stroke"/>
+          <line x1="30" y1="97" x2="70" y2="97" stroke="#19e3ff" stroke-width="3" vector-effect="non-scaling-stroke" opacity=".8"/>
+        </svg>
+      </div>
+      <div class="sub">SEMICONDUCTOR NEWS MONITOR</div>
+      <h1>반도체 뉴스 모니터링 시스템</h1>
+    </div>
+    <div class="side r">기준일 <b>2026-10-27</b> · <span id="clock"></span></div>
+  </header>
+
+  <nav class="scopes" id="scopes" aria-label="뉴스 범위"></nav>
+
+  <main class="grid">
+    <div class="col">
+      <section class="panel" id="p-cat"><h2 class="ptitle">분야별 기사 수</h2><div class="pbody"></div></section>
+      <section class="panel" id="p-sent"><h2 class="ptitle">논조 분포</h2><div class="pbody"></div></section>
+    </div>
+    <div class="col">
+      <section class="panel" id="p-kpi"><h2 class="ptitle">핵심 지표 <small id="kpiScope"></small></h2><div class="pbody"></div></section>
+      <section class="panel" id="p-news"><h2 class="ptitle">기사 목록 <small id="newsCount"></small></h2>
+        <div class="tools">
+          <span id="catChips" style="display:contents"></span>
+          <input id="q" class="search" type="search" placeholder="제목·요약·기업 검색" aria-label="기사 검색">
+        </div>
+        <div class="news" id="news"></div>
+      </section>
+    </div>
+    <div class="col">
+      <section class="panel" id="p-day"><h2 class="ptitle">일자별 기사 수</h2><div class="pbody"></div></section>
+      <section class="panel" id="p-co"><h2 class="ptitle">언급 기업 TOP 8</h2><div class="pbody"></div></section>
+      <section class="panel" id="p-catpie"><h2 class="ptitle">분야 비율</h2><div class="pbody"></div></section>
+    </div>
+  </main>
+
+  <div class="note" id="note"></div>
+  <div class="foot">5개 분야 하위 에이전트 수집 · 단일 파일 대시보드</div>
+</div>
+
+<script>
+const DATA = {"memory":[{"title":"Q4 DRAM Prices Projected to Rise 20%","source":"StockHub (TrendForce 인용)","date":"2026-10-20","url":"https://www.stockhub.kr/en/news/news_b7244c205001","summary":"TrendForce는 2026년 4분기 DRAM 고정거래가격이 전분기 대비 약 20% 상승할 것으로 전망했다. 2분기(약 80%)와 3분기(약 40%)보다 상승폭이 줄어드는 흐름이다.","companies":["CXMT","NVIDIA"],"sentiment":"neutral"},{"title":"DRAM Market Bulletin - Oct. 21, 2026","source":"TrendForce","date":"2026-10-21","url":"https://www.trendforce.com/research/download/RP261021BP","summary":"공급사들이 4분기 PC DRAM 계약 견적에서 가격 인상폭을 공격적으로 넓히고 있으며, 2027년 PC DRAM 공급은 축소될 전망이다. HBM은 16단 양산 시점이 늦어지고 8단 HBM이 2027년 하반기 주류가 될 것으로 제시됐다.","companies":[],"sentiment":"positive"}],"foundry":[{"title":"삼성전자, 美 테일러 2공장 내달 착공…1.5배 키워 '2나노 승부'","source":"뉴스핌","date":"2026-10-20","url":"https://www.newspim.com/news/view/20261020000562","summary":"삼성전자가 텍사스 테일러 2공장을 11월 착공할 예정이며, 1공장보다 약 1.5배 큰 규모에 2나노 공정을 적용해 2030년 완공을 목표로 한다. 생산능력과 양산 시점은 공개되지 않았다.","companies":["삼성전자"],"sentiment":"positive"},{"title":"테일러에 장비 밀어 넣는 삼성… 2나노 승부수로 파운드리 판 흔든다","source":"글로벌이코노믹","date":"2026-10-25","url":"https://www.g-enews.com/article/Global-Biz/2026/10/202610251003281288fbbec65dfb_1","summary":"테일러 1공장에 2나노 장비를 추가 발주해 월 약 6,000장 규모의 생산능력을 늘리고, 2027년 하반기 월 약 2만 장 수준을 목표로 한다는 보도다. 원보도는 트위크타운(10월 23일)이며, 삼성전자는 이 발주를 공식 확인하지 않았다.","companies":["삼성전자"],"sentiment":"positive"},{"title":"The Foundry Disconnect: Intel Nails the Transistor, But TSMC Holds the Keys to Yield and Scale.","source":"24/7 Wall St.","date":"2026-10-23","url":"https://247wallst.com/investing/2026/10/23/the-foundry-disconnect-intel-nails-the-transistor-but-tsmc-holds-the-keys-to-yield-and-scale/","summary":"인텔 18A 생산량이 목표보다 약 25% 높다고 보도됐지만, 인텔 외부 파운드리 매출은 2.93억 달러에 그쳤고 파운드리 부문은 21억 달러 손실을 냈다. 수율 리더십은 TSMC가 평가받고 있다는 분석이다.","companies":["인텔","TSMC"],"sentiment":"neutral"},{"title":"Podcast highlights: TSMC's 3nm demand story, Samsung HBM shift, and A14 ramp","source":"DIGITIMES","date":"2026-10-23","url":"https://www.digitimes.com/news/a20261023PD235/tsmc-3nm-demand-samsung-hbm.html","summary":"TSMC 3분기 실적발표 이후 DIGITIMES 애널리스트가 남부과학단지(STSP) 신규 3nm 팹 등 시장에 덜 알려진 내용을 논의했다. 본문이 유료라 세부 수치와 A14 일정은 확인하지 못했다.","companies":["TSMC","삼성전자"],"sentiment":"neutral"},{"title":"Intel and TSMC Are Vying for Chip Fabrication Supremacy. 1 Offers Superior Value.","source":"Motley Fool","date":"2026-10-26","url":"https://www.fool.com/investing/2026/10/26/intel-tsmc-vying-for-chip-fabrication-supremacy/","summary":"인텔과 TSMC의 파운드리 사업을 비교한 투자 칼럼으로, TSMC는 영업이익률 59%로 수익성이 높은 반면 인텔 파운드리는 적자 구조라고 분석한다. 기사 성격상 의견에 가까운 자료다.","companies":["인텔","TSMC"],"sentiment":"neutral"}],"ai":[{"title":"Meta, AI 인프라 자금 위해 최대 950억 달러 규모 주식 매각 추진","source":"Seoul Economic Daily (서울경제)","date":"2026-10-26","url":"https://en.sedaily.com/international/2026/10/26/meta-seeks-up-to-95-billion-in-stock-sales-for-ai-buildout","summary":"메타가 AI 인프라 투자를 위해 최대 950억 달러 규모의 주식 매각을 추진한다. 엔비디아, AMD, 브로드컴이 합계 약 50억 달러 매입에 관심을 보였으나 법적 구속력이 없는 의향이다.","companies":["Meta","NVIDIA","AMD","Broadcom"],"sentiment":"positive"},{"title":"Anthropic S-1 분석: 데이터센터·칩·네트워킹 인프라 구성","source":"ConvergeDigest","date":"2026-10-26","url":"https://convergedigest.com/anthropic-infrastructure-roadmap-s1-filing/","summary":"Anthropic의 S-1 등록서류에 따르면 브로드컴이 공급하는 TPU 하드웨어 임대료가 5년간 약 1,612억 달러(이자 제외)로 기재됐다. 회사는 AWS Trainium, Google TPU, NVIDIA·AMD GPU를 함께 사용한다.","companies":["Anthropic","Broadcom","Google","NVIDIA","AMD","AWS"],"sentiment":"positive"},{"title":"반도체 레버리지 ETF 자금 사상 최대 유입 후 43% 폭락…AI 설비투자 속도 조절 우려","source":"글로벌이코노믹","date":"2026-10-26","url":"https://www.g-enews.com/article/Global-Biz/2026/10/202610260516521918fbbec65dfb_1","summary":"3배 레버리지 반도체 ETF SOXL에 10월 셋째 주 약 61억 달러가 유입돼 주간 기준 사상 최대를 기록했지만, 이 상품은 10월 한 달간 43% 넘게 하락했다. 기사는 AI 설비투자 속도 조절이 삼성전자·SK하이닉스의 HBM 및 서버용 D램 출하 일정에 불확실성을 줄 수 있다고 분석한다.","companies":["삼성전자","SK하이닉스"],"sentiment":"negative"},{"title":"삼성 파운드리 4나노 가동률 사실상 풀가동…AI 추론칩·ASIC 수요 반영","source":"조선비즈","date":"2026-10-20","url":"https://biz.chosun.com/it-science/ict/2026/10/20/FVMUQE74TJDODOC7562CGXREIA/","summary":"삼성 파운드리의 4나노 공정 가동률이 거의 가득 찬 상태이며, 그 배경으로 AI 추론용 칩과 ASIC 수요 증가가 꼽힌다. 2나노 공정의 빅테크 수주는 지연되고 있다.","companies":["삼성전자"],"sentiment":"positive"}],"policy":[],"market":[{"title":"[마감시황] 코스피, AI·반도체 우려에 3.73% 급락…5500선 추락","source":"블록미디어","date":"2026-10-20","url":"https://www.blockmedia.co.kr/archives/1153797","summary":"코스피가 전 거래일보다 3.73% 내린 5552.74로 마감했다. 삼성전자는 21만1500원(-2.98%), SK하이닉스는 122만3000원(-4.23%)으로 마감하며 AI 투자와 반도체 실적에 대한 우려가 부각됐다.","companies":["코스피","삼성전자","SK하이닉스"],"sentiment":"negative"},{"title":"[개장시황] 코스피, 슈퍼마이크로 깜짝 실적에 2%대 반등…반도체주 강세","source":"블록미디어","date":"2026-10-21","url":"https://www.blockmedia.co.kr/archives/1154147","summary":"개장 직후 코스피는 2.21% 오른 5675.65를 기록했다. 미국 AI 서버 업체 슈퍼마이크로의 깜짝 실적이 반도체 투자심리를 살리면서 SK하이닉스(+4.01%)와 삼성전자(+2.84%)가 동반 상승했다.","companies":["코스피","삼성전자","SK하이닉스","슈퍼마이크로"],"sentiment":"positive"},{"title":"[마감시황] 코스피, 반도체 반등에 5700선 회복…삼전·하이닉스 5%대 급등","source":"블록미디어","date":"2026-10-21","url":"https://www.blockmedia.co.kr/archives/1154366","summary":"코스피는 3.29% 오른 5735.66으로 마감했고 외국인이 약 6600억원을 순매수했다. 삼성전자는 5.67% 상승한 22만3500원, SK하이닉스는 5.81% 상승한 129만4000원에 거래를 마쳤다.","companies":["코스피","삼성전자","SK하이닉스"],"sentiment":"positive"}]};
+const PANELS = {};
+/* ---- panel_kpi.js ---- */
+try {
+PANELS.kpi = function (items, ctx) {
+  var list = Array.isArray(items) ? items : [];
+  var total = list.length;
+  var cnt = { positive: 0, neutral: 0, negative: 0 };
+  for (var i = 0; i < list.length; i++) {
+    var s = list[i] && list[i].sentiment;
+    if (s === 'positive' || s === 'neutral' || s === 'negative') cnt[s]++;
+  }
+  function pct(n) { return total ? Math.round(n / total * 100) : 0; }
+  function item(label, count, pctVal, color, centerHtml) {
+    return '<div class="kpi-item" style="flex:1 1 120px;min-width:0;display:flex;flex-direction:column;align-items:center;gap:6px;">' +
+      ctx.ringSvg(pctVal, color, 110, centerHtml) +
+      '<div style="font-size:12px;color:var(--text);">' + ctx.esc(label) + '</div>' +
+      '<div style="font-size:11px;color:var(--muted);">' + count + '건</div>' +
+      '</div>';
+  }
+  var html = '';
+  html += item('전체 기사 수', total, total ? 100 : 0, '#ffd426', total + '건');
+  var keys = ['positive', 'neutral', 'negative'];
+  for (var k = 0; k < keys.length; k++) {
+    var key = keys[k];
+    var p = pct(cnt[key]);
+    html += item(ctx.SENT[key].name, cnt[key], p, ctx.SENT[key].color, p + '%');
+  }
+  return '<div style="display:flex;flex-wrap:wrap;justify-content:space-around;align-items:flex-start;gap:12px;width:100%;">' +
+    html + '</div>';
+};
+
+} catch (e) { console.warn('[panel kpi init]', e); }
+/* ---- panel_cat.js ---- */
+try {
+PANELS.cat = function (items, ctx) {
+  var counts = ctx.count(items || [], function (a) { return a.cat; }) || {};
+  var keys = Object.keys(ctx.CATS);
+  var max = 0;
+  keys.forEach(function (k) {
+    var n = counts[k] || 0;
+    if (n > max) max = n;
+  });
+  var rows = keys.map(function (k) {
+    var c = ctx.CATS[k];
+    var n = counts[k] || 0;
+    var pct = max > 0 ? (n / max) * 100 : 0;
+    if (pct < 2) pct = 2;
+    return '<div style="display:flex;align-items:center;gap:8px;margin:8px 0;width:100%;">'
+      + '<div style="flex:0 0 74px;font-size:12px;color:var(--text);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + ctx.esc(c.name) + '</div>'
+      + '<div style="flex:0 0 1px;align-self:stretch;background:var(--cyan);opacity:.6;"></div>'
+      + '<div style="flex:1 1 auto;min-width:0;height:11px;border-radius:6px;background:rgba(25,227,255,.08);overflow:hidden;">'
+      +   '<div style="width:' + pct.toFixed(2) + '%;height:100%;border-radius:6px;background:' + c.color + ';box-shadow:0 0 8px ' + c.color + ';"></div>'
+      + '</div>'
+      + '<div style="flex:0 0 36px;font-size:13px;font-weight:600;color:' + c.color + ';text-align:right;">' + n + '</div>'
+      + '</div>';
+  }).join('');
+  return '<div style="width:100%;">' + rows + '</div>';
+};
+
+} catch (e) { console.warn('[panel cat init]', e); }
+/* ---- panel_sent.js ---- */
+try {
+PANELS.sent = function (items, ctx) {
+  var keys = ['positive', 'neutral', 'negative'];
+  var list = Array.isArray(items) ? items : [];
+  var total = list.length;
+  var counts = ctx.count(list, function (a) { return a.sentiment; }) || {};
+  var segs = [];
+  var legend = '';
+
+  keys.forEach(function (k) {
+    var meta = ctx.SENT[k];
+    var n = counts[k] || 0;
+    var pct = total ? Math.round(n / total * 100) : 0;
+    segs.push({ value: n, color: meta.color });
+    legend += '<div style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px;color:var(--text)">'
+      + '<span style="width:9px;height:9px;border-radius:50%;flex:none;background:' + meta.color + ';box-shadow:0 0 6px ' + meta.color + '"></span>'
+      + '<span style="flex:1;min-width:0">' + ctx.esc(meta.name) + '</span>'
+      + '<span style="color:var(--cyan);font-variant-numeric:tabular-nums">' + n + '건</span>'
+      + '<span style="min-width:44px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums">' + pct + '%</span>'
+      + '</div>';
+  });
+
+  var center = '<span style="font-size:12px;color:var(--text);white-space:nowrap">전체 ' + total + '건</span>';
+
+  return '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:14px;width:100%">'
+    + '<div style="flex:0 0 auto">' + ctx.donutSvg(segs, 130, center) + '</div>'
+    + '<div style="flex:1 1 140px;min-width:0">' + legend + '</div>'
+    + '</div>';
+};
+
+} catch (e) { console.warn('[panel sent init]', e); }
+/* ---- panel_day.js ---- */
+try {
+PANELS.day = function (items, ctx) {
+  var esc = ctx.esc;
+  var list = Array.isArray(items) ? items : [];
+  var days = Array.isArray(ctx.days) ? ctx.days : [];
+  var CATS = ctx.CATS || {};
+  var CH = 130, PAD = 16, FALLBACK = '#5d7389';
+  var order = Object.keys(CATS).concat(['_etc']);
+  var colorOf = function (k) { return k === '_etc' ? FALLBACK : CATS[k].color; };
+  var has = function (o, k) { return Object.prototype.hasOwnProperty.call(o, k); };
+
+  var byDay = {};
+  days.forEach(function (d) { byDay[d] = { total: 0, cats: {} }; });
+  list.forEach(function (a) {
+    if (!a || !has(byDay, a.date)) return;
+    var b = byDay[a.date];
+    var k = has(CATS, a.cat) ? a.cat : '_etc';
+    b.total += 1;
+    b.cats[k] = (b.cats[k] || 0) + 1;
+  });
+
+  var max = 1;
+  days.forEach(function (d) { if (byDay[d].total > max) max = byDay[d].total; });
+
+  var cells = days.map(function (d) {
+    var b = byDay[d], n = b.total;
+    var h = n > 0 ? Math.max(2, Math.round(n / max * CH)) : 0;
+    var segs = '', topKey = null;
+    order.forEach(function (k) {
+      var c = b.cats[k] || 0;
+      if (c > 0) {
+        segs += '<div style="flex:' + c + ' 1 0;min-height:0;background:' + colorOf(k) + '"></div>';
+        topKey = k;
+      }
+    });
+    var glow = topKey ? colorOf(topKey) + '88' : 'transparent';
+    var s = String(d);
+    var md = s.slice(5, 7) + '/' + s.slice(8, 10);
+
+    return '<div style="flex:1 1 0;min-width:0;display:flex;flex-direction:column;" title="' + esc(s + ' 날짜: ' + n + '건') + '">' +
+      '<div style="position:relative;height:' + (CH + PAD) + 'px;display:flex;flex-direction:column;justify-content:flex-end;">' +
+        '<div style="position:absolute;left:0;right:0;bottom:' + (h + 4) + 'px;text-align:center;font-size:12px;font-weight:700;line-height:1;color:' + (n ? 'var(--text)' : 'var(--muted)') + ';">' + n + '</div>' +
+        '<div style="position:relative;height:' + h + 'px;border-radius:6px 6px 2px 2px;box-shadow:0 0 10px ' + glow + ';">' +
+          (h ? '<div style="position:absolute;inset:0;overflow:hidden;border-radius:6px 6px 2px 2px;display:flex;flex-direction:column-reverse;">' + segs + '</div>' : '') +
+        '</div>' +
+      '</div>' +
+      '<div style="margin-top:4px;text-align:center;font-size:11px;line-height:14px;color:var(--muted);white-space:nowrap;">' + esc(md) + '</div>' +
+    '</div>';
+  });
+
+  var grid = [25, 50, 75].map(function (p) {
+    return '<div style="position:absolute;left:0;right:0;top:' + p + '%;height:1px;background:rgba(25,227,255,.14);"></div>';
+  }).join('');
+
+  return '<div style="position:relative;width:100%;">' +
+    '<div style="position:absolute;left:0;right:0;top:' + PAD + 'px;height:' + CH + 'px;pointer-events:none;">' + grid + '</div>' +
+    '<div style="position:relative;display:flex;align-items:flex-end;gap:6px;">' + cells.join('') + '</div>' +
+  '</div>';
+};
+
+} catch (e) { console.warn('[panel day init]', e); }
+/* ---- panel_co.js ---- */
+try {
+PANELS.co = function (items, ctx) {
+  var counts = {};
+  (items || []).forEach(function (it) {
+    var seen = {};
+    ((it && it.companies) || []).forEach(function (c) {
+      if (typeof c !== 'string') return;
+      var name = c.trim();
+      if (!name || seen[name]) return;
+      seen[name] = true;
+      counts[name] = (counts[name] || 0) + 1;
+    });
+  });
+
+  var rows = Object.keys(counts).map(function (k) {
+    return { name: k, n: counts[k] };
+  });
+  rows.sort(function (a, b) {
+    if (b.n !== a.n) return b.n - a.n;
+    return a.name.localeCompare(b.name, 'ko');
+  });
+  rows = rows.slice(0, 8);
+
+  if (!rows.length) {
+    return '<div style="color:var(--muted);font-size:12px;padding:12px 0;text-align:center">데이터 없음</div>';
+  }
+
+  var max = rows[0].n;
+  var html = '<div class="co-list" style="width:100%">';
+  rows.forEach(function (r, i) {
+    var pct = max > 0 ? (r.n / max) * 100 : 0;
+    html +=
+      '<div class="co-row" style="display:flex;align-items:center;gap:8px;margin:7px 0;font-size:12px;color:var(--text);width:100%">' +
+        '<span style="flex:0 0 16px;text-align:right;color:var(--muted)">' + (i + 1) + '</span>' +
+        '<span title="' + ctx.esc(r.name) + '" style="flex:0 0 30%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + ctx.esc(r.name) + '</span>' +
+        '<div style="flex:1 1 auto;min-width:0;height:11px;border-radius:6px;background:rgba(25,227,255,.08);overflow:hidden">' +
+          '<div style="width:' + pct.toFixed(2) + '%;height:100%;border-radius:6px;background:linear-gradient(90deg,#ffd426,#19e3ff);box-shadow:0 0 8px #19e3ff"></div>' +
+        '</div>' +
+        '<span style="flex:0 0 auto;min-width:36px;text-align:right;color:var(--yellow)">' + r.n + '건</span>' +
+      '</div>';
+  });
+  html += '</div>';
+  return html;
+};
+
+} catch (e) { console.warn('[panel co init]', e); }
+/* ---- panel_catpie.js ---- */
+try {
+PANELS.catpie = function (items, ctx) {
+  var list = items || [];
+  var counts = ctx.count(list, function (a) { return a.cat; });
+  var keys = Object.keys(ctx.CATS);
+  var total = 0;
+  keys.forEach(function (k) { total += (counts[k] || 0); });
+
+  var segs = keys.map(function (k) {
+    return { value: counts[k] || 0, color: ctx.CATS[k].color };
+  });
+
+  var center =
+    '<div style="font-size:11px;color:var(--muted)">분야 ' + keys.length + '개</div>' +
+    '<div style="font-size:18px;font-weight:700;color:var(--cyan);text-shadow:0 0 8px #19e3ff">' + total + '건</div>';
+
+  var legend = keys.map(function (k) {
+    var c = ctx.CATS[k];
+    var n = counts[k] || 0;
+    var pct = total ? Math.round(n / total * 100) : 0;
+    return '<div style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px;color:var(--text)">' +
+      '<span style="width:9px;height:9px;border-radius:50%;flex:0 0 auto;background:' + c.color + ';box-shadow:0 0 6px ' + c.color + '"></span>' +
+      '<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + ctx.esc(c.name) + '</span>' +
+      '<span style="color:var(--cyan);font-variant-numeric:tabular-nums">' + n + '건</span>' +
+      '<span style="width:44px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums">' + pct + '%</span>' +
+      '</div>';
+  }).join('');
+
+  return '<div style="display:flex;align-items:center;gap:14px;width:100%;flex-wrap:wrap">' +
+    '<div style="flex:0 0 auto">' + ctx.donutSvg(segs, 130, center) + '</div>' +
+    '<div style="flex:1 1 120px;min-width:0">' + legend + '</div>' +
+    '</div>';
+};
+
+} catch (e) { console.warn('[panel catpie init]', e); }
+
+(function () {
+  'use strict';
+  const CATS = {
+    memory:{name:'메모리',color:'#2b7bff'},
+    foundry:{name:'파운드리',color:'#a56bff'},
+    ai:{name:'AI 반도체',color:'#19e3ff'},
+    policy:{name:'장비·정책',color:'#ffa53a'},
+    market:{name:'시장·주가',color:'#ff4d6d'}
+  };
+  const SENT = {
+    positive:{name:'긍정',color:'#2ee6a6'},
+    neutral:{name:'중립',color:'#8aa0b8'},
+    negative:{name:'부정',color:'#ff4d6d'}
+  };
+  const SCOPES = {all:'전체', global:'글로벌 뉴스', samsung:'삼성전자'};
+  const days = [];
+  for (let d = 20; d <= 27; d++) days.push('2026-10-' + d);
+
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const safeUrl = u => /^https?:\/\//i.test(String(u || '')) ? String(u) : '#';
+  const count = (arr, fn) => (arr || []).reduce((m, x) => { const k = fn(x); m[k] = (m[k] || 0) + 1; return m; }, {});
+  const num = v => (typeof v === 'number' && isFinite(v) && v > 0) ? v : 0;
+
+  function donutSvg(segments, size, centerHtml) {
+    size = num(size) || 120;
+    const segs = (segments || []).filter(s => num(s && s.value) > 0);
+    const total = segs.reduce((a, s) => a + s.value, 0);
+    const sw = Math.max(6, Math.round(size * 0.12));
+    const r = (size - sw) / 2 - 2, c = size / 2, C = 2 * Math.PI * r;
+    let svg = `<svg viewBox="0 0 ${size} ${size}" aria-hidden="true">`
+      + `<circle cx="${c}" cy="${c}" r="${r + sw / 2 + 1.5}" fill="none" stroke="rgba(25,227,255,.25)" stroke-width="1"/>`
+      + `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="rgba(127,163,189,.18)" stroke-width="${sw}"/>`;
+    if (total > 0) {
+      let off = 0;
+      const gap = segs.length > 1 ? Math.min(2, C * 0.01) : 0;
+      for (const s of segs) {
+        const len = s.value / total * C;
+        const vis = Math.max(0.5, len - gap);
+        svg += `<circle class="glow" cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${esc(s.color)}" style="color:${esc(s.color)}"`
+          + ` stroke-width="${sw}" stroke-dasharray="${vis.toFixed(2)} ${(C - vis).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"`
+          + ` transform="rotate(-90 ${c} ${c})"/>`;
+        off += len;
+      }
+    }
+    svg += `<circle cx="${c}" cy="${c}" r="${Math.max(2, r - sw / 2 - 4)}" fill="none" stroke="rgba(25,227,255,.18)" stroke-width="1" stroke-dasharray="2 3"/></svg>`;
+    return `<div class="dn" style="width:${size}px;height:${size}px">${svg}<div class="dc">${centerHtml == null ? '' : centerHtml}</div></div>`;
+  }
+
+  function ringSvg(pct, color, size, centerHtml) {
+    size = num(size) || 110;
+    pct = Math.max(0, Math.min(100, Number(pct) || 0));
+    color = esc(color || '#19e3ff');
+    const sw = Math.max(5, Math.round(size * 0.09));
+    const r = (size - sw) / 2 - 6, c = size / 2, C = 2 * Math.PI * r, len = pct / 100 * C;
+    let ticks = '';
+    for (let i = 0; i < 48; i++) {
+      const a = i / 48 * 2 * Math.PI, r1 = size / 2 - 1, r2 = size / 2 - (i % 4 ? 3 : 5);
+      ticks += `<line x1="${(c + r1 * Math.sin(a)).toFixed(2)}" y1="${(c - r1 * Math.cos(a)).toFixed(2)}" x2="${(c + r2 * Math.sin(a)).toFixed(2)}" y2="${(c - r2 * Math.cos(a)).toFixed(2)}" stroke="rgba(25,227,255,${i % 4 ? .25 : .55})" stroke-width="1"/>`;
+    }
+    const svg = `<svg viewBox="0 0 ${size} ${size}" aria-hidden="true">${ticks}`
+      + `<circle cx="${c}" cy="${c}" r="${r}" fill="rgba(25,227,255,.05)" stroke="rgba(127,163,189,.2)" stroke-width="${sw}"/>`
+      + (len > 0 ? `<circle class="glow" cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${color}" style="color:${color}" stroke-width="${sw}" stroke-linecap="round"`
+        + ` stroke-dasharray="${len.toFixed(2)} ${(C - len + 0.01).toFixed(2)}" transform="rotate(-90 ${c} ${c})"/>` : '')
+      + `</svg>`;
+    return `<div class="dn" style="width:${size}px;height:${size}px">${svg}<div class="dc" style="color:${color};text-shadow:0 0 8px ${color}">${centerHtml == null ? '' : centerHtml}</div></div>`;
+  }
+
+  const ctx = Object.freeze({CATS, SENT, days, esc, count, donutSvg, ringSvg});
+
+  // ---- 데이터 정규화 + 범위 분류 ----
+  const items = [];
+  for (const k of Object.keys(CATS)) {
+    for (const n of (DATA && Array.isArray(DATA[k]) ? DATA[k] : [])) {
+      if (!n || typeof n !== 'object') continue;
+      const it = {
+        title: String(n.title || ''), source: String(n.source || ''), date: String(n.date || ''),
+        url: String(n.url || ''), summary: String(n.summary || ''),
+        companies: Array.isArray(n.companies) ? n.companies.map(String) : [],
+        sentiment: SENT[n.sentiment] ? n.sentiment : 'neutral', cat: k
+      };
+      it.scope = (it.companies.includes('삼성전자') || /삼성/.test(it.title + ' ' + it.summary)) ? 'samsung' : 'global';
+      items.push(it);
+    }
+  }
+  items.sort((a, b) => b.date.localeCompare(a.date));
+  const byScope = {
+    all: items,
+    global: items.filter(n => n.scope === 'global'),
+    samsung: items.filter(n => n.scope === 'samsung')
+  };
+
+  let curScope = 'all', curCat = 'all';
+  const $ = id => document.getElementById(id);
+
+  // ---- 토글 ----
+  $('scopes').innerHTML = Object.keys(SCOPES).map(s =>
+    `<button type="button" class="scope${s === curScope ? ' on' : ''}" data-s="${s}" aria-pressed="${s === curScope}">${SCOPES[s]}<b>${byScope[s].length}</b></button>`).join('');
+  $('scopes').addEventListener('click', e => {
+    const b = e.target.closest('.scope'); if (!b) return;
+    curScope = b.dataset.s;
+    $('scopes').querySelectorAll('.scope').forEach(x => { const on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-pressed', on); });
+    renderAll();
+  });
+
+  $('catChips').addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b || b.disabled) return;
+    curCat = b.dataset.c; renderChips(); renderNews();
+  });
+  $('q').addEventListener('input', renderNews);
+
+  // ---- 패널 ----
+  const SLOTS = ['kpi', 'cat', 'sent', 'day', 'co', 'catpie'];
+  function renderPanels(list) {
+    for (const id of SLOTS) {
+      const body = document.querySelector('#p-' + id + ' .pbody');
+      if (!body) continue;
+      try {
+        if (typeof PANELS[id] !== 'function') throw new Error('panel missing');
+        const html = PANELS[id](list.slice(), ctx);
+        body.innerHTML = (typeof html === 'string' && html.trim()) ? html : '<div class="pempty">데이터 없음</div>';
+      } catch (err) {
+        body.innerHTML = '<div class="pfail">로드 실패</div>';
+        if (window.console) console.warn('[panel ' + id + ']', err);
+      }
+    }
+  }
+
+  // ---- 기사 목록 ----
+  function renderChips() {
+    const list = byScope[curScope], cc = count(list, x => x.cat);
+    if (curCat !== 'all' && !cc[curCat]) curCat = 'all';
+    $('catChips').innerHTML = `<button type="button" class="chip${curCat === 'all' ? ' on' : ''}" data-c="all">전체<b>${list.length}</b></button>`
+      + Object.keys(CATS).map(k => `<button type="button" class="chip${curCat === k ? ' on' : ''}" data-c="${k}"${cc[k] ? '' : ' disabled'}><i style="background:${CATS[k].color};box-shadow:0 0 6px ${CATS[k].color}"></i>${CATS[k].name}<b>${cc[k] || 0}</b></button>`).join('');
+  }
+  function renderNews() {
+    const q = $('q').value.trim().toLowerCase();
+    const list = byScope[curScope].filter(n => (curCat === 'all' || n.cat === curCat) &&
+      (!q || (n.title + ' ' + n.summary + ' ' + n.source + ' ' + n.companies.join(' ')).toLowerCase().includes(q)));
+    $('newsCount').textContent = `${list.length}건 / ${SCOPES[curScope]}`;
+    $('news').innerHTML = list.length ? list.map(n => `
+      <article class="item" style="border-left-color:${CATS[n.cat].color}">
+        <h3><a href="${esc(safeUrl(n.url))}" target="_blank" rel="noopener noreferrer">${esc(n.title)}</a></h3>
+        <div class="meta"><span class="bdg ${n.scope}">${n.scope === 'samsung' ? '삼성전자' : '글로벌'}</span><span style="color:${CATS[n.cat].color}">${CATS[n.cat].name}</span><span>${esc(n.source)}</span><span>${esc(n.date)}</span><span class="snt" style="color:${SENT[n.sentiment].color}">${SENT[n.sentiment].name}</span></div>
+        <p>${esc(n.summary)}</p>
+        ${n.companies.length ? `<div class="cos">${n.companies.map(c => `<span>${esc(c)}</span>`).join('')}</div>` : ''}
+      </article>`).join('') : '<div class="empty">조건에 맞는 기사가 없습니다.</div>';
+  }
+
+  function renderAll() {
+    $('kpiScope').textContent = SCOPES[curScope] + ' · ' + byScope[curScope].length + '건';
+    renderPanels(byScope[curScope]);
+    renderChips();
+    renderNews();
+  }
+
+  // ---- 수집 한계 ----
+  (function note() {
+    const cc = count(items, x => x.cat);
+    const zero = Object.keys(CATS).filter(k => !cc[k]).map(k => CATS[k].name);
+    const mk = items.filter(n => n.cat === 'market').map(n => n.date).sort();
+    const lastMk = mk.length ? mk[mk.length - 1] : null;
+    const li = [];
+    li.push(`총 ${items.length}건(글로벌 ${byScope.global.length} · 삼성전자 ${byScope.samsung.length}). 검색 색인에서 기간 내 날짜가 확인된 기사만 담았습니다.`);
+    if (zero.length) li.push(`<b>${esc(zero.join(', '))}</b> 분야는 확인된 기사가 0건입니다.`);
+    if (lastMk) {
+      const i = days.indexOf(lastMk);
+      const fmt = d => esc(d.slice(5).replace('-', '/'));
+      if (i >= 0 && i < days.length - 1) li.push(`시장·주가 기사는 ${fmt(lastMk)}까지만 있으며, <b>${fmt(days[i + 1])} 이후 시장 기사는 없습니다</b>.`);
+    } else {
+      li.push('시장·주가 기사가 없습니다.');
+    }
+    li.push('요약은 하위 에이전트가 작성했으므로 수치는 반드시 원문 링크에서 확인하세요.');
+    $('note').innerHTML = `<b>수집 한계</b><ul>${li.map(x => `<li>${x}</li>`).join('')}</ul>`;
+  })();
+
+  // ---- 시계 ----
+  const clk = $('clock');
+  const tick = () => { const d = new Date(); clk.textContent = d.toTimeString().slice(0, 8); };
+  tick(); setInterval(tick, 1000);
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
