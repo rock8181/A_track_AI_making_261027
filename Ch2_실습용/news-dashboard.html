@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>뉴스 브리핑 대시보드</title>
+<style>
+  :root {
+    --bg: #EEF0F5; --card: #FFFFFF; --ink: #0A1547; --ink2: #2D3A52; --muted: #6E7688; --faint: #8B92A2;
+    --line: #E1E4EC; --soft: #F1F2F7; --brand: #1428A0; --brand2: #4B5CC0; --accent: #7C9BFF;
+    --hdr: #0A1547; --hdr-sub: #98A3D2; --hdr-line: rgba(200,210,240,0.2);
+    --high: #B0472F; --high-bg: #F8E9E4; --med: #8A5A0E; --med-bg: #F9EFD9; --low: #4A5568; --low-bg: #E8EAF1;
+    --warn: #8A5A0E; --warn-bg: #F9EFD9; --fail: #B0472F; --fail-bg: #F8E9E4; --ok: #1428A0; --ok-bg: #E4E8FA;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B1020; --card: #151B33; --ink: #E8EBF7; --ink2: #C9D0E8; --muted: #9AA3C4; --faint: #7F89AD;
+      --line: #263057; --soft: #1D2547; --brand: #8FA6FF; --brand2: #7C9BFF; --accent: #7C9BFF;
+      --hdr: #070C1F; --hdr-sub: #98A3D2; --hdr-line: rgba(200,210,240,0.16);
+      --high: #F0A48E; --high-bg: #3A2019; --med: #E8C174; --med-bg: #36290F; --low: #B5BDD8; --low-bg: #232B4D;
+      --warn: #E8C174; --warn-bg: #36290F; --fail: #F0A48E; --fail-bg: #3A2019; --ok: #A9BBFF; --ok-bg: #1F2A5C;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B1020; --card: #151B33; --ink: #E8EBF7; --ink2: #C9D0E8; --muted: #9AA3C4; --faint: #7F89AD;
+    --line: #263057; --soft: #1D2547; --brand: #8FA6FF; --brand2: #7C9BFF; --accent: #7C9BFF;
+    --hdr: #070C1F; --hdr-sub: #98A3D2; --hdr-line: rgba(200,210,240,0.16);
+    --high: #F0A48E; --high-bg: #3A2019; --med: #E8C174; --med-bg: #36290F; --low: #B5BDD8; --low-bg: #232B4D;
+    --warn: #E8C174; --warn-bg: #36290F; --fail: #F0A48E; --fail-bg: #3A2019; --ok: #A9BBFF; --ok-bg: #1F2A5C;
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: light dark; }
+  :root[data-theme="light"] { color-scheme: light; }
+  :root[data-theme="dark"] { color-scheme: dark; }
+  body { margin: 0; background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased;
+         font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; line-height: 1.5; }
+  h1, h2, h3 { margin: 0; font-family: "Gothic A1", "Noto Sans KR", "Malgun Gothic", sans-serif; }
+  a { color: var(--brand); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  header { background: var(--hdr); padding: 26px 16px 24px; color: #fff; }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.22em; color: #7C9BFF; font-weight: 700; }
+  .hrow { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+  header h1 { font-size: clamp(22px, 5vw, 32px); font-weight: 700; margin-top: 8px; }
+  .sub { font-size: 13px; color: var(--hdr-sub); margin-top: 6px; }
+  .theme { background: rgba(200,210,240,0.12); border: 1px solid rgba(200,210,240,0.28); color: #fff; border-radius: 8px; padding: 8px 14px; font-size: 13px; }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 22px; }
+  .kpi { background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .kpi .l { font-size: 13px; color: var(--muted); }
+  .kpi .v { font-family: "Gothic A1", sans-serif; font-size: 32px; font-weight: 900; line-height: 1.1; margin-top: 8px; }
+  .kpi .n { font-size: 12px; color: var(--faint); margin-top: 6px; }
+  .kpi.alert .v { color: var(--fail); }
+
+  main { padding: 22px 16px 48px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; }
+  .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; flex: 1 1 100%; }
+  .tab { white-space: nowrap; border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 8px 14px; font-size: 13px; display: flex; gap: 8px; align-items: center; }
+  .tab[aria-selected="true"] { background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 700; }
+  :root[data-theme="dark"] .tab[aria-selected="true"] { color: #0B1020; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tab[aria-selected="true"] { color: #0B1020; } }
+  .tab .cnt { font-size: 11px; opacity: 0.85; }
+  .search { flex: 1 1 100%; width: 100%; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 8px; padding: 10px 14px; font-size: 14px; }
+  .search::placeholder { color: var(--faint); }
+
+  .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+  .b-high { color: var(--high); background: var(--high-bg); }
+  .b-medium { color: var(--med); background: var(--med-bg); }
+  .b-low { color: var(--low); background: var(--low-bg); }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-warn { color: var(--warn); background: var(--warn-bg); }
+  .b-fail { color: var(--fail); background: var(--fail-bg); }
+
+  .sechead { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .sechead h2 { font-size: 20px; }
+  .summary { font-size: 14px; color: var(--ink2); line-height: 1.7; margin: 0; }
+  .label { font-size: 11px; letter-spacing: 0.14em; color: var(--faint); font-weight: 700; margin: 18px 0 10px; }
+
+  .metrics { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .metric { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: var(--soft); }
+  .metric .ml { font-size: 12px; color: var(--muted); }
+  .metric .mv { font-family: "Gothic A1", sans-serif; font-size: 18px; font-weight: 700; margin-top: 4px; overflow-wrap: anywhere; }
+  .metric .mn { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.55; }
+
+  .articles { display: flex; flex-direction: column; }
+  .art { padding: 16px 0; border-top: 1px solid var(--line); display: grid; gap: 6px; }
+  .art:first-child { border-top: 0; }
+  .art .top { display: flex; gap: 10px; align-items: flex-start; }
+  .art .t { font-size: 15px; font-weight: 700; line-height: 1.5; flex: 1; overflow-wrap: anywhere; }
+  .art .meta { font-size: 12px; color: var(--faint); display: flex; gap: 8px; flex-wrap: wrap; }
+  .art .s { font-size: 13px; color: var(--ink2); line-height: 1.65; margin: 0; overflow-wrap: anywhere; }
+  .art .go { font-size: 13px; font-weight: 500; }
+  .tag { font-size: 11px; color: var(--muted); }
+
+  .notice { border-radius: 10px; padding: 14px 16px; font-size: 14px; margin-bottom: 12px; }
+  .notice.fail { background: var(--fail-bg); color: var(--fail); }
+  .notice.warn { background: var(--warn-bg); color: var(--warn); }
+  .notice b { display: block; margin-bottom: 2px; }
+  .gaps { margin: 0; padding-left: 18px; font-size: 13px; color: var(--ink2); line-height: 1.7; }
+  .gaps li { margin-bottom: 4px; overflow-wrap: anywhere; }
+  .empty { padding: 28px 0; text-align: center; color: var(--muted); font-size: 14px; }
+  .results-note { font-size: 13px; color: var(--muted); margin: 0 0 10px; }
+  .hit-field { font-size: 12px; color: var(--brand); font-weight: 700; }
+  mark { background: var(--med-bg); color: var(--ink); padding: 0 2px; border-radius: 2px; }
+  footer { max-width: 1120px; margin: 0 auto; padding: 0 16px 40px; font-size: 12px; color: var(--faint); line-height: 1.7; }
+
+  @media (max-width: 760px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .panel { padding: 16px; }
+    .kpi .v { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="hrow">
+      <div>
+        <div class="eyebrow">DAILY NEWS BRIEFING</div>
+        <h1>분야별 뉴스 브리핑 대시보드</h1>
+        <div class="sub" id="asof">수집 기준: 2026-10-27 (최근 3일)</div>
+      </div>
+      <button class="theme" id="themeBtn" type="button" aria-label="테마 전환">테마 전환</button>
+    </div>
+    <section class="kpis" id="kpis" aria-label="핵심 지표"></section>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="toolbar">
+      <div class="tabs" id="tabs" role="tablist" aria-label="분야 선택"></div>
+      <input class="search" id="q" type="search" placeholder="전체 기사 키워드 검색 (제목·요약·매체)" aria-label="전체 기사 키워드 검색">
+    </div>
+    <div class="panel" id="view" style="margin-top:14px" aria-live="polite"></div>
+  </div>
+</main>
+<footer class="wrap">
+  검증 통과 분야는 기사 5건 이상이 수집된 분야로 집계했습니다. 데이터에 없는 항목은 표시하지 않으며, "미확인"은 원 데이터의 표기를 그대로 옮긴 것입니다.
+</footer>
+
+<script id="news-data" type="application/json">
+[
+{"field":"경제·금융","summary":"검증 가능한 최근 3일(10/24~10/27) 개별 기사 링크를 확보하지 못해 기사 목록은 비워 둡니다. 수집 단계에서 기사 URL이 한 건도 전달되지 않아 WebFetch 검증 대상이 없었고, 지어낸 링크로 채우지 않았습니다. 참고 수치(기준금리 연 3.00%, 7·8월 각 25bp 인상 후 10월 동결 전망)는 증권사 보고서 요약에 근거한 추정이며 한국은행 공식 자료로 확인되지 않았습니다. 환율과 코스피 최근 수치는 미확인입니다.","articles":[],"metrics":[{"label":"한국은행 기준금리(참고)","value":"연 3.00% (추정)","note":"2026-10-20 한화투자증권 보고서 요약 기반. 7월과 8월 각 25bp 인상 후 10월 동결 전망. ECOS 직접 조회 실패, 공식 확인 필요"},{"label":"원/달러 환율(참고)","value":"약 1,358원 (2026-10-01)","note":"개인 블로그 인용으로 신뢰도 낮음. 최근 3일 수치는 미확인"},{"label":"코스피","value":"미확인","note":"2026-10-27 마감치 확인 실패. korean-stock-search는 종목 단위 조회만 가능"}],"gaps":["naver-news-search: 프록시가 금리, 코스피, 환율, 부동산, 수출, 물가 검색어 모두에 무관하거나 오래된 기사만 반환해 10/24~10/27 기사를 얻지 못함","bok-ecos-stats: CLI 지침 로딩이 VirtualAlloc 메모리 오류로 실패해 기준금리, 환율, 소비자물가 수치를 직접 조회하지 못함","korean-stock-search: 코스피 지수 조회 엔드포인트가 없고, 종목 검색도 빈 결과여서 시세를 확인하지 못함","WebSearch: 날짜가 명시된 개별 기사 URL을 확보하지 못해 목록에 넣지 않음","10월 금통위 결과, 최근 3일 환율, 소비자물가, 수출 통계, 부동산 정책 기사는 모두 미확인","검증 단계: 입력에 기사 URL이 없어 WebFetch 재검증 및 제거 대상 없음 (제거한 기사 0건)"]},
+{"field":"IT·AI","summary":"앤트로픽의 나스닥 IPO 신청과 수십조~수백조 원대 컴퓨팅 계약이 AI 투자 열기와 거품 우려를 함께 키우며, 삼성·SK HBM 등 반도체 공급망이 핵심 변수로 부각됐다. 국내에서는 KT 토큰팩토리 같은 AI 플랫폼 출시와 금융권 해킹, AI를 악용한 개인정보 탈취가 이어져 AI 보안 이슈가 커졌다. AWS가 자체 AI 칩으로 엔비디아 쿠다 생태계에 도전하는 등 클라우드·AI 칩 경쟁도 이어지고 있다.","metrics":[{"label":"검증 통과 기사","value":"7건","note":"URL 접속 후 제목·날짜 모두 일치"},{"label":"제거 기사","value":"0건"}],"articles":[{"title":"앤트로픽, 나스닥서 역대 최대 IPO 도전…AI 투자 불안 넘을까","source":"IT데일리","date":"2026-10-27","summary":"클로드 개발사 앤트로픽이 나스닥 IPO를 추진하며 AI 거품 우려 속 시험대에 올랐다.","url":"https://www.itdaily.kr/news/articleView.html?idxno=242464","importance":"high"},{"title":"[유미's 픽] 'AI 재앙' 경고한 앤트로픽, 삼성·SK HBM 의존 안고 상장 도전","source":"ZDNet Korea","date":"2026-10-27","summary":"앤트로픽 상반기 매출 약 14배 성장, 클라우드 계약과 삼성·SK HBM 의존 구조를 짚었다.","url":"https://zdnet.co.kr/view/?no=20261027113417","importance":"high"},{"title":"앤트로픽, 2045년까지 AI 컴퓨팅 계약…브로드컴 213조·스페이스X 160조","source":"중앙뉴스","date":"2026-10-27","summary":"앤트로픽이 브로드컴·스페이스X 등과 초대형 장기 AI 컴퓨팅 계약을 맺고 구글·아마존·MS와도 협력을 이어간다.","url":"https://www.joongangenews.com/news/articleView.html?idxno=558513","importance":"high"},{"title":"병력·진료정보까지 보유한 보험사도 뚫렸다 … 미래에셋생명 해킹에 보안 우려 확산","source":"뉴데일리경제","date":"2026-10-27","summary":"미래에셋생명 해킹으로 민감 정보 유출 우려, 새마을금고·OK저축은행 침해사고도 신고돼 금융권 보안 경고.","url":"https://biz.newdaily.co.kr/site/data/html/2026/10/27/2026102700144.html","importance":"high"},{"title":"IT 비전공자도 'AI'로 해킹 … 90여곳 개인정보 820만건 탈취","source":"세이프타임즈","date":"2026-10-27","summary":"AI를 활용한 비전공자 해킹 총책이 90여 곳에서 개인정보 820만 건을 탈취해 구속 송치됐다.","url":"https://www.safetimes.co.kr/news/articleView.html?idxno=246864","importance":"medium"},{"title":"KT, AI 선택·관리 플랫폼 ‘토큰팩토리’ 출시","source":"헤럴드경제","date":"2026-10-27","summary":"KT가 AI 모델 선택부터 관리까지 지원하는 토큰팩토리 플랫폼을 공개했다.","url":"https://biz.heraldcorp.com/article/10916119?ref=naver","importance":"medium"},{"title":"[AI 고속도로] AWS, 엔비디아 '쿠다 생태계' 정조준…자체 AI 칩 확산 승부수","source":"ZDNet Korea","date":"2026-10-27","summary":"AWS가 트레이니움 확산으로 엔비디아 쿠다 생태계에 도전하며 AI 클라우드 인프라를 확대한다.","url":"https://zdnet.co.kr/view/?no=20261027101529","importance":"medium"}],"gaps":["geeknews-search 스킬은 python 부재로 CLI 실행 실패, RSS를 직접 조회했으며 긱뉴스에서 기사 선정에 쓸 만한 건은 없어 제외함 (OpenAI 수학 성과 등은 요약만 있어 미채택)","로봇 하위 주제는 로보티즈 공급계약, 현대차 메타플랜트 관련 정도만 확인되어 상위 기사에 포함하지 못함","최근 3일 중 10/24~10/26 기사는 검색 결과가 모두 10/27 위주여서 확인하지 못함","검증: 7건 모두 URL 접속으로 날짜 일치 확인, 제거 기사 없음. 뉴데일리경제·ZDNet(AWS) 2건은 원문과 다르던 제목 표기를 원문 기준으로 정정함","검증은 제목·날짜 일치까지만 확인했으며, 요약 속 수치(14배, 213조 등)는 원문 대조를 하지 않음"]},
+{"field":"반도체·산업","summary":"삼성전자·SK하이닉스는 28~29일 3분기 확정 실적 발표를 앞두고 있으며, 발표 전 컨센서스는 삼성 약 111~114조원, SK하이닉스 약 77~78조원, 합산 약 189조원 안팎(와이즈리포트·에프앤가이드 기준 검색 확인)으로 수집 단계의 183조원 수치와 차이가 있다. HBM4(엔비디아 차세대 플랫폼향) 매출 반영과 삼성의 HBM 점유율 회복(카운터포인트 2분기 SK 50%/삼성 33%/마이크론 18%)이 핵심 화두다. 다만 수집 단계의 개별 기사(앤트로픽 증권신고서, 번스타인 추월 전망, HBM 가격 25% 프리미엄, 110조 설비투자, 조선 빅3 수주 등)는 원문 확인에 실패해 제거했다.","articles":[{"title":"[출근길 포인트] 28·29일 확정 실적 발표 삼전닉스, 3분기 영업익 183조 전망…HBM4가 향후 실적 가른다","source":"포인트데일리","date":"미확인","summary":"28·29일 확정 실적 발표를 앞두고 3분기 합산 영업익 전망을 다룬 기사로 수집됐다. 실적 발표 일정(SK하이닉스 29일)과 HBM4 핵심 변수는 다른 보도로 교차 확인됐으나, 183조원 수치는 검증 검색에서 확인되지 않았다(다른 집계는 약 189조원).","url":"https://news.google.com/rss/articles/CBMidEFVX3lxTE1hdGJxclJ2cDhPQjlqRVhXZWEyMHJnQkszSzhxMHUzOEt1NUpwUmhRYTlEVjhBSENEMjJHYl9TRjgyOWR2NDhCM2hzMFk1ZWNONDAybVBZTHcwNWJXMkZYWkx2MEpWb1ZiODEtMFFsSkpNSHdn0gF0QVVfeXFMTWF0YnFyUnZwOE9COWpFWFdlYTIwcmdCSzNLOHEwdTM4S3U1SnBSaFFhOURWOEFIQ0QyMkdiX1NGODI5ZHY0OEIzaHMwWTVlY040MDJtUFlMdzA1YlcyRlhaTHYwSlZvVmI4MS0wUWxKSk1Id2c?oc=5","importance":"medium"}],"metrics":[{"label":"삼성전자·SK하이닉스 3분기 합산 영업익 전망","value":"약 183~190조원 (집계별 상이)","note":"수집 단계 183~185조원, 검증 검색에서는 와이즈리포트 기준 약 189.5조원(삼성 약 111조, SK하이닉스 약 78조), 에프앤가이드 SK하이닉스 약 76.9조원. 확정 발표는 10/28~29."},{"label":"삼성전자·SK하이닉스 주가","value":"미확인","note":"korean-stock-search 스킬 실행 불가로 수치 미확보. 10/27 기사 일자의 등락 보도는 검증하지 못함."},{"label":"주요 기업 DART 공시","value":"미확인","note":"k-dart 스킬 미실행"},{"label":"2분기 글로벌 HBM 매출 점유율(카운터포인트리서치)","value":"SK하이닉스 50% / 삼성 33% / 마이크론 18%","note":"검증 검색 중 economist.co.kr 보도 인용, 원문 직접 열람은 하지 못함"}],"gaps":["k-skill CLI(npx)가 VirtualAlloc 오류로 실행되지 않아 naver-news-search, k-dart, korean-stock-search 스킬을 사용하지 못함. Google News RSS(WebFetch)로 대체함","검증 결과: 모든 기사 URL이 Google News 리다이렉트 링크이며 WebFetch로 열면 'Google News' 문구만 반환되어 제목·날짜를 확인할 수 없었음. 제목 기반 WebSearch로 재확인함","제거(원문 미확인): '앤트로픽 증권신고서에 삼성·SK하이닉스 HBM 직접 조달 협상 거명'(뉴스핌) - 검색에서는 앤트로픽 투자 라운드·공급계약 보도만 확인되고 증권신고서(S-1)는 확인되지 않음","제거(원문 미확인): '삼성전자 3분기 HBM 매출 SK하이닉스 추월 전망, 번스타인'(아이뉴스24) - 해당 기사 검색되지 않음","제거(원문 미확인): '[STOCK톺] SK하이닉스 4% 가까이 상승…삼성전자도 2%대 강세'(뉴시안) - 비슷한 제목의 기사는 9월 등 다른 날짜로만 확인됨","제거(원문 미확인): '삼성전자 HBM, 경쟁사보다 최대 25% 비싸다'(디지털타임스) - 기사 및 근거 수치 확인되지 않음","제거(부분 확인): '삼성·SK하이닉스 올해 110조 설비투자, 공급 확대는 2028년부터'(서울이코노미뉴스) - 삼성 110조 투자만 확인되고 2028년 공급 확대 및 SK하이닉스 합산 110조는 확인되지 않음","제거(원문 미확인): '조선 빅3 3분기 누적 367.9억달러 수주'(브릿지경제) - 2026년 3분기 수주 기사 검색되지 않음. 조선·2차전지 내용은 요약에서도 제외함","남은 기사 1건(포인트데일리)도 날짜를 '미확인'으로 표기함. 183조원 수치는 다른 집계(약 189조원)와 달라 사용 시 주의 필요","자동차 분야 기사 수집 못함","파운드리(뉴시스 삼성 파운드리 흑자전환 청사진 등)와 2차전지 기사는 선별 기사에 포함하지 않았고 별도 검증도 하지 않음"]},
+{"field":"정치·사회","summary":"이재명 대통령이 중앙행정기관장의 국무회의 배석 논란에서 한발 물러서 중수청장에게 자율 참석을 허용하고, 확장 재정 필요성을 재확인했다. 국회 법사위 국정감사에서는 공수처장이 김혜경 여사의 '황제 골프' 의혹이 수사 대상에 해당한다고 밝혔고(고발 접수 전), 민주당 신천지 의혹 조사 결과 공개를 둘러싼 당내 갈등이 이어졌다. 선관위 특검팀의 올림픽공원 보관 투표지 검증이 28일 예정되어 경찰이 약 3,000명 규모 인력을 배치한다. 사회 분야에서는 국악계 미성년 제자 성착취 고소 사건과 역삼동 연쇄 방화 사건 수사가 주목받았다.","metrics":[],"articles":[{"title":"이 대통령, 중수청장에 \"억지로 올 필요 없다\"… 국무회의 배석 논란에 한발 물러서","source":"한국일보","date":"2026-10-27","summary":"이 대통령이 중앙행정기관장의 국무회의 참석은 정치적 중립과 무관하다는 입장을 재확인하면서도, 중수청장에게는 바쁘면 안 와도 된다며 월 1회 정도 참석 가이드라인을 제시했다.","url":"https://www.hankookilbo.com/news/article/A2026102710440003274?did=mcp","importance":"high"},{"title":"경찰, 올림픽공원 투표지 검증에 기동대 48개 배치… \"불법행위 엄정 대응\"","source":"한국일보","date":"2026-10-27","summary":"서울경찰청이 28일 올림픽공원 핸드볼경기장에서 열리는 선관위 특검팀의 보관 투표지(약 247만 장) 검증에 기동대 48개 등 약 3,000명을 투입하고, 검증 방해 등 불법행위에 엄정 대응하겠다고 밝혔다.","url":"https://www.hankookilbo.com/news/article/A2026102709130004907?did=mcp","importance":"high"},{"title":"'김혜경 황제 골프' 의혹에 \"수사 대상에 해당\"… 공수처장 \"고발되면 원칙 따라\"","source":"한국일보","date":"2026-10-26","summary":"오동운 공수처장이 법사위 국정감사에서 김혜경 여사가 신분상 수사 대상에 해당하나 아직 고발이 없어 접수되면 원칙대로 판단하겠다고 밝혔다. 청와대는 허위사실 유포에 책임을 묻겠다고 했다.","url":"https://www.hankookilbo.com/news/article/A2026102616110004004?did=mcp","importance":"high"},{"title":"이 대통령, '확장 재정' 필요 재확인… 유럽 시위 '반면교사' 지적에도 \"견강부회 경계해야\"","source":"한국일보","date":"2026-10-27","summary":"이 대통령이 국무회의에서 유럽 시위를 재정 확대의 반면교사로 삼는 시각을 견강부회라며 경계하고, 확장 재정으로 미래 성장에 집중할 때라고 강조했다. 연내 지역경제·골목상권 활성화 대책 시행도 지시했다.","url":"https://www.hankookilbo.com/news/article/A2026102710200003257?did=mcp","importance":"medium"},{"title":"'민주당 신천지 의혹' 결과 공개 않는 김민석... 친청계 면전 요구에도 '침묵', 왜?","source":"한국일보","date":"2026-10-27","summary":"당원 정비 TF의 신천지 관련 조사 결과 공개를 친청계가 요구하지만 김민석 대표는 침묵 중이며, 지도부는 의원총회 보고를 국정감사 이후로 유보했다.","url":"https://www.hankookilbo.com/news/article/A2026102616590004682?did=mcp","importance":"medium"},{"title":"'입시' 목줄 쥐고 미성년 제자 4년 성 착취… 유명 국악 연주자의 민낯","source":"한국일보","date":"2026-10-27","summary":"중학교에 출강한 유명 국악 연주자가 미성년 제자를 약 4년간 성적으로 착취했다는 고소장이 서울경찰청에 접수돼 수사가 시작됐다. 연주자 측은 혐의를 부인하고 수사에 협조하겠다고 밝혔다.","url":"https://www.hankookilbo.com/news/article/A2026102311250003008?did=mcp","importance":"medium"},{"title":"역삼동 연쇄 방화범 신상 공개될까… 경찰, 심의 결정","source":"한국일보","date":"2026-10-27","summary":"역삼동 특허법인 사무실 두 곳에 불을 질러 19명을 다치게 한 77세 남성의 신상공개 여부를 경찰이 이번 주 심의하며, 살인미수 혐의 추가도 검토 중이다. 구속기간은 30일 만료된다.","url":"https://www.hankookilbo.com/news/article/A2026102709350005402?did=mcp","importance":"medium"}],"gaps":["naver-news-search 프록시가 검색어와 무관한 과거(2011~2024년) 기사만 반환해 사용할 수 없었음 (국회, 정부·정책, 사건사고, 교육, 노동 전부 해당)","교육(입시·학교 정책) 하위 주제 기사 미확보","노동(파업·노사 정책) 하위 주제 기사 미확보","국회 국정감사·입법 동향 및 한국일보 외 타 매체 교차 확인 미수행","검증 결과: 7개 기사 URL 모두 WebFetch로 제목·날짜 일치 확인, 제거한 기사 없음. 단 한국일보 단일 매체 기준이며 투표지 검증 기사의 '대화경찰 150명·수사인력 300명' 세부 수치는 본문에서 확인되지 않아 총 약 3,000명 표기로 대체함. 국악 연주자 기사는 URL 번호상 10/23 생성 가능성이 있으나 페이지 입력일은 10/27로 확인됨"]},
+{"field":"과학·바이오","summary":"검증된 핵심 흐름은 셀트리온 3분기 실적(매출 1조5,755억 원, 영업이익 5,253억 원, 전년비 +74.3%)으로 대표되는 바이오시밀러 호조와, 재난적 의료비 관리·산후조리원 요금 등 의료비·보건 정책 이슈입니다. 갑상선암·골다공증 건강 정보 기사도 확인됐습니다. 우주·기후·에너지, 신약 임상, 순수 과학 연구 성과는 이번 수집에서 확인하지 못했습니다.","metrics":[{"label":"검증 기사 수","value":"5건","note":"6건 수집 후 중복 1건 병합(데일리팜). 과학 기사 비중은 낮음"},{"label":"셀트리온 3분기 영업이익","value":"5,253억원 (+74.3%)","note":"한국일보 10/27 확정 보도 기준. 데일리팜 10/12 잠정 5,100억원은 이전 수치"},{"label":"셀트리온 3분기 매출","value":"1조5,755억원 (+53.1%)","note":"영업이익률 33.3% (전년 29.3%)"},{"label":"골다공증 유병률(50세 이상 여성)","value":"21.4%","note":"질병관리청 2025년 국민건강영양조사 인용"}],"articles":[{"title":"셀트리온, 3분기 매출 1조5,755억 원…영업이익 74% 증가","source":"한국일보","date":"2026-10-27","summary":"셀트리온 3분기 매출 1조5,755억 원(+53.1%), 영업이익 5,253억 원(+74.3%), 영업이익률 33.3%. 10/12 데일리팜의 잠정 보도(첫 분기 영업익 5000억 돌파, 약 5,100억 원)와 같은 주제여서 병합함.","url":"https://www.hankookilbo.com/news/article/A2026102709410003828?did=mcp","importance":"high"},{"title":"1800억 건보 지원하면서 영수증은 '종이 스캔'…재난적 의료비 관리 사각지대","source":"한국일보","date":"2026-10-27","summary":"지난해 재난적 의료비 지원액 2,004억 원 중 91.6%가 퇴원 후 신청 건인데 다른 병원 영수증은 이미지로만 보관돼 분석이 어렵다. 경증에 가까운 척추·관절·외상 지원액은 5.8배 증가했고, 전산화와 사전 승인제 도입 주장이 나왔다.","url":"https://www.hankookilbo.com/news/article/A2026102710420002908?did=mcp","importance":"medium"},{"title":"나랏돈 200만 원 줬더니 조리원 배만 불렸나…물가보다 2.4배 폭등한 '보조금의 역설'","source":"한국일보","date":"2026-10-27","summary":"민간 산후조리원 2주 일반실 평균 요금이 2020년 276만 원에서 2025년 384만 원으로 39.1% 올라 같은 기간 물가 상승률(16.6%)의 약 2.4배. 2027년 지원금 통합으로 추가 인상 우려. (URL 일련번호는 10/19로 보여 실제 게재일은 재확인 필요)","url":"https://www.hankookilbo.com/news/article/A2026101917170002596?did=mcp","importance":"medium"},{"title":"'착한 암'이라더니 또 재발… 갑상선암, 무조건 수술해야 할까","source":"한국일보","date":"2026-10-27","summary":"저위험 유두암은 적극적 감시가 가능하고, 반절제술이면 호르몬약이 불필요할 수 있다. 재발·전이 시 수술, 방사성요오드, 표적치료 등을 검토하며 다학제 협진의 중요성을 짚은 건강 기사. (URL 일련번호는 10/26)","url":"https://www.hankookilbo.com/news/article/A2026102611430004678?did=mcp","importance":"low"},{"title":"넘어지지 않아도 뼈가 부러진다… 골다공증, 골절 전에 찾아야","source":"한국일보","date":"2026-10-27","summary":"50세 이상 여성 골다공증 유병률 21.4%, 골감소증 58.4%. 증상 없이 진행되므로 골밀도검사(T점수 -2.5 이하 진단), 운동, 비타민 D 관리, 낙상 예방이 필요하다. (URL 일련번호는 10/26)","url":"https://www.hankookilbo.com/news/article/A2026102609320005883?did=mcp","importance":"low"}],"gaps":["신약 개발·임상시험 속보(10/24~10/27)","우주(누리호 5차 발사 결과 등) 최신 기사","기후·에너지 정책 최신 기사","순수 과학(연구 성과) 기사","네이버 뉴스 검색 프록시가 오래된 무관 기사만 반환해 활용하지 못함","한국일보 과학 섹션 직접 조회 불가(섹션 목록에 과학 없음)","제거/병합: 데일리팜 '셀트리온, 분기 영업익 첫 5000억원 돌파'(10/12, 접속 확인됨)는 한국일보 10/27 확정 기사와 동일 주제의 이전 잠정 보도라 병합","일부 한국일보 기사는 URL 일련번호(10/19, 10/26)와 페이지 표기 게재일(10/27)이 달라 정확한 게재일 재확인 필요"]},
+{"field":"국제","summary":"미군의 이란 재공습 준비 보도(CNN 인용)로 중동 긴장이 이어지고 있다. 미중 관세·수출통제 측면에서는 PIIE가 대미 투자 약 6조 달러에도 중국산 우회 교역이 지속된다고 분석했고, 중국의 희토류 수출통제 강화로 EU가 핵심광물 직접 투자 방식을 검토한다. 유럽은 해외 직구 소포에 2유로 수수료를 부과하기로 했으며, 브라질에서는 룰라가 첫 4선 대통령이 됐다.","metrics":[],"articles":[{"title":"\"트럼프 명령 떨어지면 96시간 내 공격\"…미군, 이란 재공습 준비","source":"아주경제","date":"2026-10-27","summary":"CNN 보도로 미군이 이란 재공습을 준비 중이며 중간선거 후 이스라엘 합동 공습 가능성이 제기됐다.","url":"https://www.ajunews.com/view/20261027080535569","importance":"high"},{"title":"美 싱크탱크 \"대미 투자는 역마셜플랜…관세로도 중국 못 떼어냈다\"","source":"데일리안","date":"2026-10-27","summary":"PIIE는 관세 협상으로 확보한 약 6조 달러 대미 투자를 역마셜플랜으로 규정하고, 대중 교역은 우회로 이어진다고 분석했다.","url":"https://www.dailian.co.kr/news/view/1706639/?sc=Naver","importance":"high"},{"title":"EU, 핵심광물 확보전서 '트럼프 전략' 검토","source":"고코리아","date":"2026-10-27","summary":"중국의 희토류 수출통제 강화로 공급망이 흔들리자 EU가 정부 주도 직접 투자 방식을 검토한다.","url":"https://www.gokorea.kr/news/articleView.html?idxno=882865","importance":"high"},{"title":"트럼프 \"이란전쟁 곧 끝날 것…휴전은 시간 낭비였다\"","source":"연합뉴스","date":"미확인","summary":"트럼프가 유세에서 이란전 조기 종료를 전망하며 기존 휴전 조치를 시간 낭비라고 평가했다. (원문 열람 불가, 검색으로도 동일 기사 미확인)","url":"https://www.yna.co.kr/view/AKR20261027071000071?input=1195m","importance":"high"},{"title":"EU, '블프' 앞두고 해외소포 수수료 부과... 中 테무 등 겨냥","source":"한국일보","date":"2026-10-27","summary":"EU가 역내로 배송되는 해외 직구 소포에 물품 종류별 2유로 취급수수료를 부과하기로 했다.","url":"https://www.hankookilbo.com/news/article/A2026102709510003738?did=NA","importance":"medium"},{"title":"'좌파 대부' 룰라의 역전극… 브라질 첫 4선 대통령 탄생","source":"한국일보","date":"2026-10-26","summary":"룰라가 브라질 대선에서 승리해 첫 4선 대통령이 되며 중남미 우파 바람에 제동을 걸었다.","url":"https://www.hankookilbo.com/news/article/A2026102609140001507?did=mcp","importance":"medium"}],"gaps":["일본 총리 관련은 중일 관계 기사 위주로 수집, 일본 정책 변화 기사는 제한적","미국 상무부 수출통제 신규 조치 자체를 다룬 개별 기사는 확보하지 못함","러시아-우크라이나 전황 관련 기사는 수집하지 못함","제거: 연합뉴스 '日 게이단렌 내달 中방문단 파견 연기' - URL 열람 불가, 제목 검색 시 유사 보도가 2025-12-31자(2026년 1월 방문 연기, 중국 답변 없음)로 확인되어 날짜·내용(중국 요청) 불일치","연합뉴스 트럼프 이란전 기사는 URL 열람 및 검색 확인 불가로 date를 '미확인' 처리 (후속 보도 확인 필요)","'후티의 사우디 시설 공격' 내용은 기사 근거가 없어 요약에서 제외"]}
+]
+</script>
+
+<script>
+(function () {
+  var DATA = JSON.parse(document.getElementById('news-data').textContent);
+  var MIN = 5;
+  var ORDER = ['high', 'medium', 'low'];
+  var IMP_LABEL = { high: '중요 높음', medium: '중요 보통', low: '중요 낮음' };
+  var state = { tab: 0, q: '' };
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"'`]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;' }[c];
+    });
+  }
+  function safeUrl(u) { return /^https?:\/\//i.test(String(u)) ? String(u) : ''; }
+  function status(f) {
+    var n = f.articles.length;
+    if (n === 0) return { key: 'fail', label: '수집 실패' };
+    if (n < MIN) return { key: 'warn', label: '수집 부족' };
+    return { key: 'ok', label: '수집 충족' };
+  }
+  function hl(text, q) {
+    var t = esc(text);
+    if (!q) return t;
+    var eq = esc(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    try { return t.replace(new RegExp(eq, 'gi'), function (m) { return '<mark>' + m + '</mark>'; }); } catch (e) { return t; }
+  }
+
+  function renderKpis() {
+    var total = DATA.reduce(function (a, f) { return a + f.articles.length; }, 0);
+    var passed = DATA.filter(function (f) { return status(f).key === 'ok'; });
+    var bad = DATA.filter(function (f) { return status(f).key !== 'ok'; });
+    var names = bad.map(function (f) { return f.field + '(' + status(f).label + ')'; }).join(', ');
+    var items = [
+      { l: '전체 분야 수', v: DATA.length + '개', n: DATA.map(function (f) { return f.field; }).join(' · ') },
+      { l: '수집 기사 수', v: total + '건', n: '분야별 합계' },
+      { l: '검증 통과 분야', v: passed.length + '개', n: '기사 ' + MIN + '건 이상 수집된 분야' },
+      { l: '수집 부족/실패 분야', v: bad.length + '개', n: names || '없음', alert: bad.length > 0 }
+    ];
+    document.getElementById('kpis').innerHTML = items.map(function (k) {
+      return '<div class="kpi' + (k.alert ? ' alert' : '') + '"><div class="l">' + esc(k.l) + '</div><div class="v">' + esc(k.v) + '</div><div class="n">' + esc(k.n) + '</div></div>';
+    }).join('');
+  }
+
+  function renderTabs() {
+    var tabs = DATA.map(function (f, i) {
+      var st = status(f);
+      return '<button type="button" class="tab" role="tab" data-i="' + i + '" aria-selected="' + (i === state.tab && !state.q) + '">' +
+        esc(f.field) + '<span class="cnt">' + f.articles.length + '건' + (st.key !== 'ok' ? ' · ' + esc(st.label) : '') + '</span></button>';
+    }).join('');
+    document.getElementById('tabs').innerHTML = tabs;
+  }
+
+  function badge(imp) {
+    var k = ORDER.indexOf(imp) >= 0 ? imp : 'low';
+    return '<span class="badge b-' + k + '">' + esc(IMP_LABEL[k]) + ' · ' + esc(imp) + '</span>';
+  }
+
+  function articleHtml(a, q, field) {
+    var url = safeUrl(a.url);
+    var link = url ? '<a class="go" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">원문 보기 ↗</a>' : '<span class="tag">원문 링크 없음</span>';
+    return '<article class="art"><div class="top"><div class="t">' + hl(a.title, q) + '</div>' + badge(a.importance) + '</div>' +
+      '<div class="meta">' + (field ? '<span class="hit-field">' + esc(field) + '</span>' : '') + '<span>' + hl(a.source, q) + '</span><span>·</span><span>' + esc(a.date) + '</span></div>' +
+      '<p class="s">' + hl(a.summary, q) + '</p>' + link + '</article>';
+  }
+
+  function gapsHtml(f) {
+    if (!f.gaps || !f.gaps.length) return '';
+    return '<div class="label">수집 한계 · GAPS (' + f.gaps.length + ')</div><ul class="gaps">' +
+      f.gaps.map(function (g) { return '<li>' + esc(g) + '</li>'; }).join('') + '</ul>';
+  }
+
+  function renderField(f) {
+    var st = status(f), n = f.articles.length, h = '';
+    h += '<div class="sechead"><h2>' + esc(f.field) + '</h2><span class="badge b-' + st.key + '">' + esc(st.label) + '</span><span class="tag">기사 ' + n + '건</span></div>';
+    if (st.key === 'fail') h += '<div class="notice fail"><b>수집 실패</b>이 분야는 표시할 기사가 0건입니다. 아래 수집 한계를 확인하세요.</div>';
+    else if (st.key === 'warn') h += '<div class="notice warn"><b>수집 부족</b>기사 ' + n + '건으로 기준 ' + MIN + '건에 미치지 못합니다. 아래 수집 한계를 확인하세요.</div>';
+    h += '<div class="label">핵심 흐름</div><p class="summary">' + esc(f.summary) + '</p>';
+    var ms = (f.metrics || []);
+    if (ms.length && (f.field === '경제·금융' || f.field === '반도체·산업' || f.field === '과학·바이오')) {
+      h += '<div class="label">지표</div><div class="metrics">' + ms.map(function (m) {
+        return '<div class="metric"><div class="ml">' + esc(m.label) + '</div><div class="mv">' + esc(m.value) + '</div>' +
+          (m.note ? '<div class="mn">출처 메모: ' + esc(m.note) + '</div>' : '') + '</div>';
+      }).join('') + '</div>';
+    }
+    if (n) {
+      var sorted = f.articles.slice().sort(function (a, b) { return ORDER.indexOf(a.importance) - ORDER.indexOf(b.importance); });
+      h += '<div class="label">기사 (' + n + ')</div><div class="articles">' + sorted.map(function (a) { return articleHtml(a, '', ''); }).join('') + '</div>';
+    }
+    h += gapsHtml(f);
+    return h;
+  }
+
+  function renderSearch(q) {
+    var ql = q.toLowerCase(), hits = [];
+    DATA.forEach(function (f) {
+      f.articles.forEach(function (a) {
+        if ((a.title + ' ' + a.summary + ' ' + a.source).toLowerCase().indexOf(ql) >= 0) hits.push({ f: f.field, a: a });
+      });
+    });
+    var h = '<div class="sechead"><h2>검색 결과</h2></div><p class="results-note">"' + esc(q) + '" · 전체 ' + DATA.reduce(function (s, f) { return s + f.articles.length; }, 0) + '건 중 ' + hits.length + '건</p>';
+    if (!hits.length) return h + '<div class="empty">일치하는 기사가 없습니다.</div>';
+    return h + '<div class="articles">' + hits.map(function (x) { return articleHtml(x.a, q, x.f); }).join('') + '</div>';
+  }
+
+  function render() {
+    renderTabs();
+    document.getElementById('view').innerHTML = state.q ? renderSearch(state.q) : renderField(DATA[state.tab]);
+  }
+
+  document.getElementById('tabs').addEventListener('click', function (e) {
+    var b = e.target.closest('.tab');
+    if (!b) return;
+    state.tab = +b.getAttribute('data-i');
+    state.q = '';
+    document.getElementById('q').value = '';
+    render();
+  });
+  document.getElementById('q').addEventListener('input', function (e) {
+    state.q = e.target.value.trim();
+    render();
+  });
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var r = document.documentElement;
+    var dark = r.getAttribute('data-theme') === 'dark' ||
+      (!r.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    r.setAttribute('data-theme', dark ? 'light' : 'dark');
+  });
+
+  renderKpis();
+  render();
+})();
+</script>
+</body>
+</html>

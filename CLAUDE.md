@@ -18,6 +18,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 작업 규칙
 
 - 커밋·푸시는 직접 하지 않고 Haiku 서브에이전트(`model: "haiku"`)에 맡깁니다. 서브에이전트에는 변경 파일 목록과 커밋 메시지 방향을 넘기고, `.env`·API 키 등 비밀값이 스테이징되지 않았는지 확인시킨 뒤 결과(커밋 해시, 푸시 여부)를 보고받습니다.
+- 엑셀 등 결과물을 만들 때 쓴 Python 스크립트는 임시 폴더에 두지 말고 결과물과 같은 폴더에 함께 저장합니다. 인자 없이 다시 실행해도 같은 결과물이 나오도록 기본 경로를 넣고, 기준값은 스크립트 상단 상수로 둡니다.
+  - 예: `Ch5_실습용/find_anomaly.py` → `Ch5_실습용/이상데이터_분석.xlsx` (실행: `Ch5_실습용/`에서 `python find_anomaly.py`)
 
 ## Ch5_완성본 (RAG) 명령어
 
